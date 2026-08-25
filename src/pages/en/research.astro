@@ -1,0 +1,10 @@
+---
+import Base from '../../layouts/Base.astro';
+import ResearchView from '../../views/ResearchView.astro';
+import { useT } from '../../i18n/utils';
+const lang = 'en' as const;
+const t = useT(lang);
+---
+<Base lang={lang} title={t('research.title')} current="research">
+  <ResearchView lang={lang} />
+</Base>

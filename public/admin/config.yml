@@ -1,0 +1,158 @@
+# =============================================================
+#  관리자 페이지 설정 (Sveltia CMS)
+#
+#  ⚠️ 아래 repo 항목을 본인의 GitHub 저장소로 반드시 바꿔주세요.
+#     예) repo: yhjung105/lab-website
+# =============================================================
+
+backend:
+  name: github
+  repo: your-github-id/lab-website # ← 여기를 수정하세요
+  branch: main
+  # 학생들도 로그인해서 글을 쓰게 하려면 아래 두 줄의 주석을 풀고
+  # Cloudflare Workers에 인증 도우미를 배포한 주소를 넣으세요. (가이드 5단계 참고)
+  # base_url: https://sveltia-cms-auth.your-account.workers.dev
+  # auth_endpoint: auth
+
+# 글을 저장하면 GitHub에 남는 커밋 메시지
+site_url: https://example.pages.dev # ← 배포 후 실제 주소로 수정
+display_url: https://example.pages.dev # ← 배포 후 실제 주소로 수정
+publish_mode: simple
+
+# 업로드한 사진이 저장되는 위치
+media_folder: public/images
+public_folder: /images
+
+# 한국어 / 영어를 나란히 놓고 작성할 수 있게 합니다.
+i18n:
+  structure: multiple_folders
+  locales: [ko, en]
+  default_locale: ko
+
+collections:
+  # ---------------------------------------------------------
+  # 공지사항 · 갤러리
+  # ---------------------------------------------------------
+  - name: news
+    label: 공지사항 · 갤러리
+    label_singular: 글
+    folder: src/content/news
+    create: true
+    slug: '{{year}}-{{month}}-{{day}}-{{slug}}'
+    sortable_fields: [date, title]
+    i18n: true
+    fields:
+      - { name: title, label: 제목, widget: string, i18n: true }
+      - { name: date, label: 작성일, widget: datetime, format: 'YYYY-MM-DD', date_format: 'YYYY-MM-DD', time_format: false, i18n: duplicate }
+      - name: category
+        label: 분류
+        widget: select
+        default: notice
+        i18n: duplicate
+        options:
+          - { label: 공지, value: notice }
+          - { label: 수상, value: award }
+          - { label: 행사, value: event }
+          - { label: 갤러리, value: gallery }
+      - { name: pinned, label: 상단 고정, widget: boolean, default: false, required: false, i18n: duplicate }
+      - { name: summary, label: 한 줄 요약, widget: text, required: false, i18n: true }
+      - { name: thumbnail, label: 대표 사진, widget: image, required: false, i18n: duplicate }
+      - name: gallery
+        label: 갤러리 사진
+        widget: list
+        required: false
+        i18n: duplicate
+        field: { name: image, label: 사진, widget: image }
+      - { name: body, label: 본문, widget: markdown, i18n: true }
+
+  # ---------------------------------------------------------
+  # 구성원
+  # ---------------------------------------------------------
+  - name: members
+    label: 구성원
+    label_singular: 구성원
+    folder: src/content/members
+    create: true
+    slug: '{{slug}}'
+    sortable_fields: [order, name]
+    i18n: true
+    fields:
+      - { name: name, label: 이름, widget: string, i18n: true }
+      - name: role
+        label: 구분
+        widget: select
+        default: ms
+        i18n: duplicate
+        options:
+          - { label: 지도교수, value: professor }
+          - { label: 박사후연구원, value: postdoc }
+          - { label: 박사과정, value: phd }
+          - { label: 석사과정, value: ms }
+          - { label: 학부연구생, value: undergrad }
+          - { label: 졸업생, value: alumni }
+      - { name: position, label: 직위 / 학년, widget: string, required: false, i18n: true }
+      - { name: topic, label: 연구 주제, widget: string, required: false, i18n: true }
+      - { name: email, label: 이메일, widget: string, required: false, i18n: duplicate }
+      - { name: photo, label: 사진, widget: image, required: false, i18n: duplicate }
+      - { name: order, label: 표시 순서 (작을수록 먼저), widget: number, default: 1, value_type: int, i18n: duplicate }
+      - name: links
+        label: 외부 링크
+        widget: list
+        required: false
+        i18n: duplicate
+        fields:
+          - { name: label, label: 이름, widget: string }
+          - { name: url, label: 주소, widget: string }
+      - { name: body, label: 소개 (선택), widget: markdown, required: false, i18n: true }
+
+  # ---------------------------------------------------------
+  # 연구 분야
+  # ---------------------------------------------------------
+  - name: research
+    label: 연구 분야
+    label_singular: 연구 분야
+    folder: src/content/research
+    create: true
+    slug: '{{slug}}'
+    sortable_fields: [order, title]
+    i18n: true
+    fields:
+      - { name: title, label: 분야명, widget: string, i18n: true }
+      - { name: summary, label: 한 줄 설명, widget: text, i18n: true }
+      - { name: order, label: 표시 순서, widget: number, default: 1, value_type: int, i18n: duplicate }
+      - name: keywords
+        label: 키워드
+        widget: list
+        required: false
+        i18n: true
+        field: { name: keyword, label: 키워드, widget: string }
+      - { name: body, label: 상세 설명, widget: markdown, i18n: true }
+
+  # ---------------------------------------------------------
+  # 논문 · 실적 (영문 서지정보라 언어 구분 없음)
+  # ---------------------------------------------------------
+  - name: publications
+    label: 논문 · 실적
+    label_singular: 논문
+    folder: src/content/publications
+    create: true
+    slug: '{{year}}-{{slug}}'
+    sortable_fields: [year, title]
+    fields:
+      - { name: title, label: 제목, widget: string }
+      - { name: authors, label: 저자, widget: string, hint: '예) M. Kim, S. Lee, and Y.-H. Jung' }
+      - { name: venue, label: 게재처 / 권·호·페이지, widget: string, hint: '예) IEEE Transactions on Industry Applications, vol. 62, no. 3, pp. 2140–2150' }
+      - { name: year, label: 연도, widget: number, value_type: int, default: 2026 }
+      - name: type
+        label: 종류
+        widget: select
+        default: journal
+        options:
+          - { label: 학술지, value: journal }
+          - { label: 학술대회, value: conference }
+          - { label: 특허, value: patent }
+          - { label: 연구과제, value: project }
+      - { name: doi, label: DOI, widget: string, required: false, hint: '예) 10.1109/TIA.2026.0000000' }
+      - { name: link, label: 원문 링크, widget: string, required: false }
+      - { name: featured, label: 메인 화면에 표시, widget: boolean, default: false, required: false }
+      - { name: body, label: 메모 (선택), widget: markdown, required: false }

@@ -1,0 +1,252 @@
+---
+import { getCollection } from 'astro:content';
+import { useT, type Lang } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useT(lang);
+
+const pubs = (await getCollection('publications')).sort(
+  (a, b) => b.data.year - a.data.year || a.data.title.localeCompare(b.data.title),
+);
+
+const typeLabel: Record<string, string> = {
+  journal: t('pubs.journal'),
+  conference: t('pubs.conference'),
+  patent: t('pubs.patent'),
+  project: t('pubs.project'),
+};
+
+const filters = [
+  { key: 'all', label: t('pubs.all'), count: pubs.length },
+  ...(['journal', 'conference', 'patent', 'project'] as const)
+    .map((k) => ({
+      key: k,
+      label: typeLabel[k],
+      count: pubs.filter((p) => p.data.type === k).length,
+    }))
+    .filter((f) => f.count > 0),
+];
+
+const years = [...new Set(pubs.map((p) => p.data.year))].sort((a, b) => b - a);
+---
+
+<section class="page-head">
+  <div class="wrap">
+    <p class="eyebrow">Publications</p>
+    <h1>{t('pubs.title')}</h1>
+    <p class="lead">{t('pubs.desc')}</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="filters scroll-x" role="group" aria-label={t('pubs.title')}>
+      {filters.map((f) => (
+        <button
+          type="button"
+          class:list={['filter', { 'is-active': f.key === 'all' }]}
+          data-filter={f.key}
+        >
+          {f.label}
+          <span class="filter-count">{f.count}</span>
+        </button>
+      ))}
+    </div>
+
+    <div class="years">
+      {years.map((year) => (
+        <section class="year-block" data-year={year}>
+          <h2 class="year-title">{year}</h2>
+          <ol class="pub-list">
+            {pubs
+              .filter((p) => p.data.year === year)
+              .map((p) => (
+                <li class="pub-item" data-type={p.data.type}>
+                  <span class:list={['tag', 'pub-type', `pub-type--${p.data.type}`]}>
+                    {typeLabel[p.data.type]}
+                  </span>
+                  <div>
+                    <h3 class="pub-title">
+                      {p.data.link ? (
+                        <a href={p.data.link} target="_blank" rel="noopener noreferrer">
+                          {p.data.title}
+                        </a>
+                      ) : (
+                        p.data.title
+                      )}
+                    </h3>
+                    <p class="pub-authors">{p.data.authors}</p>
+                    <p class="pub-venue">
+                      {p.data.venue}
+                      {p.data.doi && (
+                        <>
+                          {' · '}
+                          <a
+                            class="pub-doi"
+                            href={`https://doi.org/${p.data.doi.replace(/^https?:\/\/doi\.org\//, '')}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            DOI
+                          </a>
+                        </>
+                      )}
+                    </p>
+                  </div>
+                </li>
+              ))}
+          </ol>
+        </section>
+      ))}
+    </div>
+
+    <p class="empty" hidden>{t('pubs.empty')}</p>
+  </div>
+</section>
+
+<style>
+  .filters {
+    display: flex;
+    gap: 8px;
+    padding-bottom: 6px;
+    margin-bottom: 34px;
+    border-bottom: 1px solid var(--border);
+  }
+  .filter {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 16px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    border-radius: 999px;
+    font: inherit;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s ease;
+  }
+  .filter:hover {
+    border-color: var(--accent-border);
+    color: var(--text);
+  }
+  .filter.is-active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+  .filter-count {
+    font-size: 0.75rem;
+    opacity: 0.7;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .year-block + .year-block {
+    margin-top: 38px;
+  }
+  .year-title {
+    font-size: 1.5rem;
+    color: var(--text-faint);
+    font-variant-numeric: tabular-nums;
+    padding-bottom: 10px;
+    margin-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .pub-list {
+    list-style: none;
+    display: grid;
+    gap: 4px;
+  }
+  .pub-item {
+    display: grid;
+    grid-template-columns: 92px 1fr;
+    gap: 18px;
+    padding: 16px 4px;
+    border-bottom: 1px solid var(--border);
+  }
+  .pub-item:last-child {
+    border-bottom: none;
+  }
+  .pub-type {
+    align-self: start;
+    justify-self: start;
+    margin-top: 2px;
+  }
+  .pub-type--journal {
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-color: var(--accent-border);
+  }
+  .pub-title {
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.45;
+    margin-bottom: 5px;
+  }
+  .pub-title a:hover {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .pub-authors {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    margin: 0 0 2px;
+  }
+  .pub-venue {
+    font-size: 0.85rem;
+    color: var(--text-faint);
+    margin: 0;
+  }
+  .pub-venue a {
+    color: var(--accent);
+  }
+  .pub-venue a:hover {
+    text-decoration: underline;
+  }
+
+  .empty {
+    text-align: center;
+    color: var(--text-faint);
+    padding: 50px 0;
+  }
+
+  @media (max-width: 560px) {
+    .pub-item {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+  }
+</style>
+
+<script>
+  const buttons = document.querySelectorAll<HTMLButtonElement>('.filter');
+  const items = document.querySelectorAll<HTMLElement>('.pub-item');
+  const blocks = document.querySelectorAll<HTMLElement>('.year-block');
+  const empty = document.querySelector<HTMLElement>('.empty');
+
+  buttons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const type = btn.dataset.filter;
+      buttons.forEach((b) => b.classList.toggle('is-active', b === btn));
+
+      items.forEach((li) => {
+        li.hidden = type !== 'all' && li.dataset.type !== type;
+      });
+
+      let visible = 0;
+      blocks.forEach((block) => {
+        const shown = block.querySelectorAll<HTMLElement>('.pub-item:not([hidden])').length;
+        block.hidden = shown === 0;
+        visible += shown;
+      });
+      if (empty) empty.hidden = visible > 0;
+    });
+  });
+</script>

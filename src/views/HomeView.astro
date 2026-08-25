@@ -1,0 +1,463 @@
+---
+import { getCollection } from 'astro:content';
+import {
+  useT,
+  usePath,
+  useSite,
+  filterByLang,
+  formatDate,
+  type Lang,
+} from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useT(lang);
+const path = usePath(lang);
+const s = useSite(lang);
+
+const research = filterByLang(await getCollection('research'), lang).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+
+const allNews = filterByLang(await getCollection('news'), lang).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+const news = allNews.slice(0, 3);
+
+const pubs = await getCollection('publications');
+const featured = [...pubs]
+  .sort((a, b) => Number(b.data.featured) - Number(a.data.featured) || b.data.year - a.data.year)
+  .slice(0, 4);
+
+const members = filterByLang(await getCollection('members'), lang).filter(
+  (m) => m.data.role !== 'alumni',
+);
+
+const catLabel = (c: string) =>
+  ({
+    notice: t('news.notice'),
+    award: t('news.award'),
+    event: t('news.event'),
+    gallery: t('news.gallery'),
+  })[c] ?? c;
+---
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="hero-bg" aria-hidden="true">
+    <svg viewBox="0 0 600 600" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <radialGradient id="hg" cx="50%" cy="50%">
+          <stop offset="0%" stop-color="currentColor" stop-opacity="0.5" />
+          <stop offset="100%" stop-color="currentColor" stop-opacity="0" />
+        </radialGradient>
+      </defs>
+      <circle cx="300" cy="300" r="290" fill="url(#hg)" />
+      <g fill="none" stroke="currentColor" stroke-width="1" opacity="0.4">
+        <circle cx="300" cy="300" r="250" />
+        <circle cx="300" cy="300" r="190" />
+        <circle cx="300" cy="300" r="130" stroke-dasharray="6 9" />
+        <circle cx="300" cy="300" r="70" />
+        {Array.from({ length: 12 }).map((_, i) => (
+          <line
+            x1="300"
+            y1="300"
+            x2={300 + 250 * Math.cos((i * Math.PI) / 6)}
+            y2={300 + 250 * Math.sin((i * Math.PI) / 6)}
+            opacity="0.5"
+          />
+        ))}
+      </g>
+    </svg>
+  </div>
+
+  <div class="wrap hero-inner">
+    <p class="hero-eyebrow">{s.university}</p>
+    <h1 class="hero-title">{s.labName}</h1>
+    <p class="hero-tagline">{s.tagline}</p>
+    <p class="hero-lead">{s.heroLead}</p>
+    <div class="hero-actions">
+      <a href={path('/research')} class="btn btn--primary">{t('nav.research')} →</a>
+      <a href={path('/members')} class="btn btn--onDark">{t('nav.members')}</a>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <dl class="stats">
+      <div>
+        <dt>{t('home.stat.pubs')}</dt>
+        <dd>{pubs.length}</dd>
+      </div>
+      <div>
+        <dt>{t('home.stat.members')}</dt>
+        <dd>{members.length}</dd>
+      </div>
+      <div>
+        <dt>{t('home.stat.areas')}</dt>
+        <dd>{research.length}</dd>
+      </div>
+    </dl>
+  </div>
+</section>
+
+<!-- ================= 연구 분야 ================= -->
+{research.length > 0 && (
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Research</p>
+          <h2 class="h-section">{t('home.research.title')}</h2>
+          <p class="lead">{t('home.research.desc')}</p>
+        </div>
+        <a href={path('/research')} class="link-more">{t('home.more')} →</a>
+      </div>
+
+      <div class="grid research-grid">
+        {research.slice(0, 6).map((item, i) => (
+          <article class="card research-card">
+            <span class="research-num">{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="research-title">{item.data.title}</h3>
+            <p class="research-summary">{item.data.summary}</p>
+            {item.data.keywords.length > 0 && (
+              <ul class="kw-list">
+                {item.data.keywords.slice(0, 3).map((k) => (
+                  <li class="tag">{k}</li>
+                ))}
+              </ul>
+            )}
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+<!-- ================= 최근 소식 ================= -->
+{news.length > 0 && (
+  <section class="section section--soft">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">News</p>
+          <h2 class="h-section">{t('home.news.title')}</h2>
+        </div>
+        <a href={path('/news')} class="link-more">{t('home.more')} →</a>
+      </div>
+
+      <div class="grid grid--3">
+        {news.map((post) => (
+          <a href={`${path('/news')}${post.slug}/`} class="card news-card">
+            {post.data.thumbnail && (
+              <img class="news-thumb" src={post.data.thumbnail} alt="" loading="lazy" />
+            )}
+            <div class="news-meta">
+              <span class="tag tag--accent">{catLabel(post.data.category)}</span>
+              <time datetime={post.data.date.toISOString()}>
+                {formatDate(post.data.date, lang)}
+              </time>
+            </div>
+            <h3 class="news-title">{post.data.title}</h3>
+            {post.data.summary && <p class="news-summary">{post.data.summary}</p>}
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+<!-- ================= 주요 논문 ================= -->
+{featured.length > 0 && (
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Publications</p>
+          <h2 class="h-section">{t('home.pubs.title')}</h2>
+        </div>
+        <a href={path('/publications')} class="link-more">{t('home.more')} →</a>
+      </div>
+
+      <ol class="pub-list">
+        {featured.map((p) => (
+          <li class="pub-item">
+            <span class="pub-year">{p.data.year}</span>
+            <div class="pub-body">
+              <h3 class="pub-title">
+                {p.data.link ? (
+                  <a href={p.data.link} target="_blank" rel="noopener noreferrer">{p.data.title}</a>
+                ) : (
+                  p.data.title
+                )}
+              </h3>
+              <p class="pub-authors">{p.data.authors}</p>
+              <p class="pub-venue">{p.data.venue}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+)}
+
+<!-- ================= 학생 모집 CTA ================= -->
+<section class="section join">
+  <div class="wrap join-inner">
+    <div>
+      <h2 class="join-title">{t('contact.join.title')}</h2>
+      <p class="join-desc">{t('contact.join.desc')}</p>
+    </div>
+    <a href={`mailto:${s.email}`} class="btn btn--primary">{t('contact.join.cta')} →</a>
+  </div>
+</section>
+
+<style>
+  /* ---- hero ---- */
+  .hero {
+    position: relative;
+    background: linear-gradient(165deg, var(--ink) 0%, var(--ink-soft) 100%);
+    color: #fff;
+    padding-block: clamp(64px, 10vw, 116px) 0;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    color: var(--accent);
+    opacity: 0.22;
+    pointer-events: none;
+  }
+  .hero-bg svg {
+    position: absolute;
+    right: -14%;
+    top: 50%;
+    transform: translateY(-50%);
+    width: min(760px, 78vw);
+    height: min(760px, 78vw);
+  }
+  .hero-inner {
+    position: relative;
+    max-width: var(--wrap);
+  }
+  .hero-eyebrow {
+    font-size: 0.84rem;
+    letter-spacing: 0.06em;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 12px;
+  }
+  .hero-title {
+    font-size: clamp(2.1rem, 5.6vw, 3.5rem);
+    color: #fff;
+    margin-bottom: 14px;
+    max-width: 18ch;
+  }
+  .hero-tagline {
+    font-size: clamp(1.02rem, 2.1vw, 1.22rem);
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 18px;
+  }
+  .hero-lead {
+    max-width: 54ch;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 1rem;
+    margin-bottom: 30px;
+  }
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-bottom: 8px;
+  }
+
+  .stats {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    margin: clamp(44px, 6vw, 64px) 0 0;
+    background: rgba(255, 255, 255, 0.12);
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+  }
+  .stats > div {
+    background: var(--ink);
+    padding: 22px 4px 26px;
+  }
+  .stats dt {
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.5);
+    letter-spacing: 0.04em;
+    margin-bottom: 4px;
+  }
+  .stats dd {
+    margin: 0;
+    font-size: clamp(1.6rem, 3.4vw, 2.1rem);
+    font-weight: 700;
+    color: #fff;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---- 공통 섹션 헤더 ---- */
+  .section-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 34px;
+    flex-wrap: wrap;
+  }
+  .section-head .lead {
+    margin: 10px 0 0;
+  }
+
+  /* ---- 연구 분야 ---- */
+  .research-grid {
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  }
+  @media (max-width: 400px) {
+    .research-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .research-card {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  .research-num {
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  .research-title {
+    font-size: 1.08rem;
+    margin-bottom: 9px;
+  }
+  .research-summary {
+    color: var(--text-muted);
+    font-size: 0.93rem;
+    margin-bottom: 16px;
+    flex: 1;
+  }
+  .kw-list {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  /* ---- 뉴스 ---- */
+  .news-card {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    overflow: hidden;
+  }
+  .news-thumb {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-bottom: 1px solid var(--border);
+  }
+  .news-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.79rem;
+    color: var(--text-faint);
+    padding: 22px 24px 0;
+  }
+  .news-title {
+    font-size: 1.03rem;
+    padding: 10px 24px 0;
+  }
+  .news-summary {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    padding: 8px 24px 24px;
+    margin: 0;
+  }
+  .news-card:not(:has(.news-summary)) .news-title {
+    padding-bottom: 24px;
+  }
+
+  /* ---- 논문 ---- */
+  .pub-list {
+    list-style: none;
+    display: grid;
+    gap: 2px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  .pub-item {
+    display: grid;
+    grid-template-columns: 68px 1fr;
+    gap: 18px;
+    padding: 22px 26px;
+    background: var(--surface);
+  }
+  .pub-year {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+    padding-top: 2px;
+  }
+  .pub-title {
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.45;
+    margin-bottom: 6px;
+  }
+  .pub-title a:hover {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .pub-authors {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    margin: 0 0 2px;
+  }
+  .pub-venue {
+    font-size: 0.86rem;
+    color: var(--text-faint);
+    font-style: italic;
+    margin: 0;
+  }
+
+  /* ---- CTA ---- */
+  .join {
+    border-top: 1px solid var(--border);
+    background: var(--bg-soft);
+  }
+  .join-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 28px;
+    flex-wrap: wrap;
+  }
+  .join-title {
+    font-size: clamp(1.3rem, 2.6vw, 1.7rem);
+    margin-bottom: 8px;
+  }
+  .join-desc {
+    color: var(--text-muted);
+    max-width: 54ch;
+    margin: 0;
+  }
+
+  @media (max-width: 560px) {
+    .pub-item {
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+  }
+</style>
