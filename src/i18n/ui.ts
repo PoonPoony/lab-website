@@ -7,10 +7,10 @@ export const defaultLang: Lang = 'ko';
  */
 export const site = {
   ko: {
-    labName: '전기기기 설계연구실',
-    labShort: 'EMDL',
-    university: 'OO대학교 전기공학과',
-    tagline: '전기기기의 설계·해석·최적화를 연구합니다',
+    labName: '전동파워트레인연구실',
+    labShort: 'ePTL',
+    university: '영남대학교 미래자동공학과',
+    tagline: '모터 설계 기법·탈희토류 모터·시스템 기반 설계 연구',
     heroLead:
       '유한요소해석(FEA) 기반의 손실 해석과 열 모델링을 통해 고효율 매입형 영구자석 동기전동기(IPMSM)를 설계하고 최적화합니다.',
     address: 'OO시 OO구 OO로 123, OO대학교 공학관 000호',
