@@ -3,7 +3,7 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
 // ⚠️ 배포 후 실제 주소로 바꿔주세요 (예: 'https://emdl.your-univ.ac.kr')
-const SITE = 'https://example.pages.dev';
+const SITE = 'https://lab-website.yhjung105.workers.dev';
 
 export default defineConfig({
   site: SITE,
