@@ -23,7 +23,7 @@ export const site = {
     university: 'Dept. of Automotive Engineering, Yeungnam University',
     tagline: 'Design, analysis and optimization of electric machines',
     heroLead:
-      'We design and optimize high-efficiency interior permanent magnet synchronous motors (IPMSM) through FEA-based loss analysis and thermal modeling.',
+      'AI-based optimizing design, Multiphysics coupled analysis (electromagnetic·thermal·NVH), Rare-earth-free motor design, System-level performance prediction',
     address: 'Automotive Eng. Bldg., 280 Daehak-ro, Gyeongsan-si, Gyeongsangbuk-do 38541, Republic of Korea',
     email: 'yhjung@yu.ac.kr',
     phone: '+82-53-810-3008',
