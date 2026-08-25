@@ -78,6 +78,9 @@ const catLabel = (c: string) =>
     <h1 class="hero-title">{s.labName}</h1>
     <p class="hero-tagline">{s.tagline}</p>
     <p class="hero-lead">{s.heroLead}</p>
+    <ul class="hero-keys">
+      {s.keywords.map((k) => <li>{k}</li>)}
+    </ul>
     <div class="hero-actions">
       <a href={path('/research')} class="btn btn--primary">{t('nav.research')} →</a>
       <a href={path('/members')} class="btn btn--onDark">{t('nav.members')}</a>
