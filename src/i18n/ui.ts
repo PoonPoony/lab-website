@@ -30,6 +30,12 @@ export const site = {
     tagline: 'Design, analysis and optimization of electric machines',
     heroLead:
       'AI-based optimizing design, Multiphysics coupled analysis (electromagnetic·thermal·NVH), Rare-earth-free motor design, System-level performance prediction',
+    keywords: [
+  'AI-based optimizing design',
+  'Multiphysics coupled analysis (electromagnetic·thermal·NVH)',
+  'Rare-earth-free motor design',
+  'System-level performance prediction',
+],
     address: 'Automotive Eng. Bldg., 280 Daehak-ro, Gyeongsan-si, Gyeongsangbuk-do 38541, Republic of Korea',
     email: 'yhjung@yu.ac.kr',
     phone: '+82-53-810-3008',
