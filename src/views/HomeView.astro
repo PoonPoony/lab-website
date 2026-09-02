@@ -102,15 +102,14 @@ const catLabel = (c: string) =>
 
   <div class="wrap hero-inner">
     <p class="hero-eyebrow">{s.university}</p>
-    <h1 class="hero-title">{s.labName}</h1>
+    <div class="hero-headline">
+      <span class="hero-logo"><img src="/logo1.png" alt="" /></span>
+      <h1 class="hero-title">{s.labName}</h1>
+    </div>
     <p class="hero-tagline">{s.tagline}</p>
     <ul class="hero-keys">
       {s.keywords.map((k) => <li>{k}</li>)}
     </ul>
-    <div class="hero-actions">
-      <a href={path('/research')} class="btn btn--primary">{t('nav.research')} →</a>
-      <a href={path('/members')} class="btn btn--onDark">{t('nav.members')}</a>
-    </div>
   </div>
 
   <div class="wrap">
@@ -341,7 +340,7 @@ const catLabel = (c: string) =>
     position: relative;
     background: linear-gradient(165deg, var(--ink) 0%, var(--ink-soft) 100%);
     color: #fff;
-    padding-block: clamp(64px, 10vw, 116px) 0;
+    padding-block: clamp(40px, 5.5vw, 64px) 0;
     overflow: hidden;
   }
   .hero-bg {
@@ -367,19 +366,48 @@ const catLabel = (c: string) =>
     font-size: 0.84rem;
     letter-spacing: 0.06em;
     color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 10px;
+  }
+  .hero-headline {
+    display: flex;
+    align-items: center;
+    gap: clamp(12px, 1.6vw, 18px);
     margin-bottom: 12px;
   }
+  .hero-logo {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: clamp(48px, 6.4vw, 64px);
+    height: clamp(48px, 6.4vw, 64px);
+    background: #fff;
+    border-radius: 16px;
+    padding: 9px;
+  }
+  .hero-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
   .hero-title {
-    font-size: clamp(2.1rem, 5.6vw, 3.5rem);
+    font-size: clamp(1.9rem, 4.6vw, 2.9rem);
     color: #fff;
-    margin-bottom: 14px;
+    margin-bottom: 0;
     max-width: 18ch;
+    min-width: 0;
+  }
+  @media (max-width: 560px) {
+    .hero-headline {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
   }
   .hero-tagline {
     font-size: clamp(1.02rem, 2.1vw, 1.22rem);
     color: var(--accent);
     font-weight: 600;
-    margin-bottom: 22px;
+    margin-bottom: 16px;
   }
   .hero-lead {
     max-width: 54ch;
@@ -393,7 +421,7 @@ const catLabel = (c: string) =>
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    margin: 0 0 30px;
+    margin: 0;
     padding: 0;
   }
   .hero-keys li {
@@ -405,19 +433,13 @@ const catLabel = (c: string) =>
     border-radius: 999px;
     padding: 5px 13px;
   }
-  .hero-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    padding-bottom: 8px;
-  }
 
   .stats {
     position: relative;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1px;
-    margin: clamp(44px, 6vw, 64px) 0 0;
+    margin: clamp(28px, 3.6vw, 40px) 0 0;
     background: rgba(255, 255, 255, 0.12);
     border-top: 1px solid rgba(255, 255, 255, 0.12);
   }
