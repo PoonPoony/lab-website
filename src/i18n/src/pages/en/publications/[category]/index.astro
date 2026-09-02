@@ -1,0 +1,19 @@
+---
+import Base from '../../../../layouts/Base.astro';
+import PublicationListView from '../../../../views/PublicationListView.astro';
+import { useT } from '../../../../i18n/utils';
+import { PUB_CATEGORIES } from '../../../../i18n/pubs';
+
+export async function getStaticPaths() {
+  return PUB_CATEGORIES.map((c) => ({
+    params: { category: c.slug },
+    props: { key: c.key },
+  }));
+}
+const { key } = Astro.props;
+const lang = 'en' as const;
+const t = useT(lang);
+---
+<Base lang={lang} title={`${t(`pubs.${key}` as any)} | ${t('pubs.title')}`} current="publications">
+  <PublicationListView lang={lang} category={key} />
+</Base>
