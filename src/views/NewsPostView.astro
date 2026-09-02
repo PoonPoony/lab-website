@@ -15,8 +15,7 @@ const catLabel = (c: string) =>
   ({
     notice: t('news.notice'),
     award: t('news.award'),
-    event: t('news.event'),
-    gallery: t('news.gallery'),
+    event: t('news.event'),    
   })[c] ?? c;
 ---
 
@@ -43,17 +42,7 @@ const catLabel = (c: string) =>
 
       <div class="prose">
         <Content />
-      </div>
-
-      {entry.data.gallery.length > 0 && (
-        <div class="gallery">
-          {entry.data.gallery.map((src) => (
-            <a href={src} target="_blank" rel="noopener noreferrer" class="gallery-item">
-              <img src={src} alt="" loading="lazy" />
-            </a>
-          ))}
-        </div>
-      )}
+      </div>     
 
       <a href={path('/news')} class="btn btn--ghost back-btn">← {t('news.back')}</a>
     </div>
