@@ -53,18 +53,29 @@ const publications = defineCollection({
   }),
 });
 
-// 공지사항 / 갤러리
+// 공지사항
 const news = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/news' }),
   schema: z.object({
     title: z.string(),
     date: z.coerce.date(),
-    category: z.enum(['notice', 'award', 'event', 'gallery']).default('notice'),
+    category: z.enum(['notice', 'award', 'event']).default('notice'),
     summary: z.string().default(''),
     thumbnail: z.string().optional(),
-    gallery: z.array(z.string()).default([]),
     pinned: z.boolean().default(false),
   }),
 });
 
-export const collections = { research, members, publications, news };
+// 갤러리 — 사진 중심
+const gallery = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/gallery' }),
+  schema: z.object({
+    title: z.string(),
+    date: z.coerce.date(),
+    summary: z.string().default(''),
+    cover: z.string().optional(),
+    photos: z.array(z.string()).default([]),
+  }),
+});
+
+export const collections = { research, members, publications, news, gallery };
