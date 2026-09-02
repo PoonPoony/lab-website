@@ -100,7 +100,7 @@ const catLabel = (c: string) =>
     </svg>
   </div>
 
-  <div class="wrap hero-inner">    
+  <div class="wrap hero-inner">
     <div class="hero-headline">
       <span class="hero-logo"><img src="/logo1.png" alt="" /></span>
       <div class="hero-headline-text">
@@ -108,7 +108,7 @@ const catLabel = (c: string) =>
         <h1 class="hero-title">{s.labName}</h1>
         <p class="hero-tagline">{s.tagline}</p>
       </div>
-    </div>    
+    </div>
     <ul class="hero-keys">
       {s.keywords.map((k) => <li>{k}</li>)}
     </ul>
@@ -368,23 +368,26 @@ const catLabel = (c: string) =>
     font-size: 0.84rem;
     letter-spacing: 0.06em;
     color: rgba(255, 255, 255, 0.6);
-    margin-bottom: 10px;
+    margin-bottom: 4px;
   }
   .hero-headline {
     display: flex;
     align-items: center;
-    gap: clamp(12px, 1.6vw, 18px);
-    margin-bottom: 12px;
+    gap: clamp(14px, 1.8vw, 22px);
+    margin-bottom: 22px;
+  }
+  .hero-headline-text {
+    min-width: 0;
   }
   .hero-logo {
     flex: none;
     display: grid;
     place-items: center;
-    width: clamp(48px, 6.4vw, 64px);
-    height: clamp(48px, 6.4vw, 64px);
+    width: clamp(76px, 10vw, 112px);
+    height: clamp(76px, 10vw, 112px);
     background: #fff;
-    border-radius: 16px;
-    padding: 9px;
+    border-radius: 20px;
+    padding: 11px;
   }
   .hero-logo img {
     width: 100%;
@@ -394,9 +397,10 @@ const catLabel = (c: string) =>
   .hero-title {
     font-size: clamp(1.9rem, 4.6vw, 2.9rem);
     color: #fff;
-    margin-bottom: 0;
+    margin-bottom: 6px;
     max-width: 18ch;
     min-width: 0;
+    line-height: 1.14;
   }
   @media (max-width: 560px) {
     .hero-headline {
@@ -409,7 +413,7 @@ const catLabel = (c: string) =>
     font-size: clamp(1.02rem, 2.1vw, 1.22rem);
     color: var(--accent);
     font-weight: 600;
-    margin-bottom: 16px;
+    margin-bottom: 0;
   }
   .hero-lead {
     max-width: 54ch;
