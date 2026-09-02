@@ -7,7 +7,7 @@
 
 backend:
   name: github
-  repo: PoonPoony/lab-website # ← 여기를 수정하세요
+  repo: your-github-id/lab-website # ← 여기를 수정하세요
   branch: main
   # 학생들도 로그인해서 글을 쓰게 하려면 아래 두 줄의 주석을 풀고
   # Cloudflare Workers에 인증 도우미를 배포한 주소를 넣으세요. (가이드 5단계 참고)
@@ -15,8 +15,8 @@ backend:
   # auth_endpoint: auth
 
 # 글을 저장하면 GitHub에 남는 커밋 메시지
-site_url: https://lab-website.yhjung105.workers.dev # ← 배포 후 실제 주소로 수정
-display_url: https://lab-website.yhjung105.workers.dev # ← 배포 후 실제 주소로 수정
+site_url: https://example.pages.dev # ← 배포 후 실제 주소로 수정
+display_url: https://example.pages.dev # ← 배포 후 실제 주소로 수정
 publish_mode: simple
 
 # 업로드한 사진이 저장되는 위치
@@ -163,13 +163,13 @@ collections:
       - name: type
         label: 종류
         widget: select
-        default: journal
+        default: intl-journal
         options:
-          - { label: 학술지, value: journal }
-          - { label: 학술대회, value: conference }
+          - { label: 국제학술지, value: intl-journal }
+          - { label: 국제학술대회, value: intl-conf }
+          - { label: 국내학술대회, value: domestic-conf }
           - { label: 특허, value: patent }
           - { label: 연구과제, value: project }
       - { name: doi, label: DOI, widget: string, required: false, hint: '예) 10.1109/TIA.2026.0000000' }
       - { name: link, label: 원문 링크, widget: string, required: false }
-      - { name: featured, label: 메인 화면에 표시, widget: boolean, default: false, required: false }
-      - { name: body, label: 메모 (선택), widget: markdown, required: false }
+      - { name: body, label: 초록 · 설명 (선택), widget: markdown, required: false, hint: '여기에 쓴 내용이 논문 상세 페이지에 나옵니다.' }

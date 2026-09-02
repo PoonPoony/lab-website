@@ -46,10 +46,9 @@ const publications = defineCollection({
     authors: z.string(),
     venue: z.string(),
     year: z.number(),
-    type: z.enum(['journal', 'conference', 'patent', 'project']),
+    type: z.enum(['intl-journal', 'intl-conf', 'domestic-conf', 'patent', 'project']),
     doi: z.string().default(''),
     link: z.string().default(''),
-    featured: z.boolean().default(false),
   }),
 });
 

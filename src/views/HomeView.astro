@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import { HOME_PUB_KEYS, catByKey } from '../i18n/pubs';
 import {
   useT,
   usePath,
@@ -54,9 +55,29 @@ const feed = [...newsItems, ...galleryItems]
   .slice(0, 4);
 
 const pubs = await getCollection('publications');
-const featured = [...pubs]
-  .sort((a, b) => Number(b.data.featured) - Number(a.data.featured) || b.data.year - a.data.year)
-  .slice(0, 4);
+const pubBase = path('/publications');
+
+// 카테고리별 최신 4편
+const pubTabs = HOME_PUB_KEYS.map((key) => {
+  const cat = catByKey(key)!;
+  return {
+    key,
+    label: t(cat.labelKey),
+    href: key === 'intl-journal' ? pubBase : `${pubBase}${cat.slug}/`,
+    items: pubs
+      .filter((p) => p.data.type === key)
+      .sort((a, b) => b.data.year - a.data.year || a.data.title.localeCompare(b.data.title))
+      .slice(0, 4)
+      .map((p) => ({
+        id: p.id,
+        detail: `${pubBase}${cat.slug}/${p.id}/`,
+        year: p.data.year,
+        title: p.data.title,
+        authors: p.data.authors,
+        venue: p.data.venue,
+      })),
+  };
+}).filter((g) => g.items.length > 0);
 
 const catLabel = (c: string) =>
   ({
@@ -158,43 +179,82 @@ const catLabel = (c: string) =>
 </section>
 
 <!-- ================= 주요 논문 (전체 폭) ================= -->
-{featured.length > 0 && (
-  <section class="section section--soft">
+{pubTabs.length > 0 && (
+  <section class="section section--soft pubs">
     <div class="wrap">
       <div class="section-head">
         <div>
           <p class="eyebrow">Publications</p>
           <h2 class="h-section">{t('home.pubs.title')}</h2>
         </div>
-        <a href={path('/publications')} class="link-more">{t('home.more')} →</a>
       </div>
 
-      <ol class="pub-list">
-        {featured.map((p) => (
-          <li class="pub-item">
-            <span class="pub-year">{p.data.year}</span>
-            <div class="pub-body">
-              <h3 class="pub-title">
-                {p.data.link ? (
-                  <a href={p.data.link} target="_blank" rel="noopener noreferrer">{p.data.title}</a>
-                ) : (
-                  p.data.title
-                )}
-              </h3>
-              <p class="pub-authors">{p.data.authors}</p>
-              <p class="pub-venue">{p.data.venue}</p>
-            </div>
-          </li>
+      <div class="ptabs" role="tablist" aria-label={t('home.pubs.title')}>
+        {pubTabs.map((g, i) => (
+          <button
+            type="button"
+            role="tab"
+            id={`ptab-${g.key}`}
+            aria-controls={`ppanel-${g.key}`}
+            aria-selected={i === 0 ? 'true' : 'false'}
+            class:list={['ptab', { 'is-active': i === 0 }]}
+          >
+            {g.label}
+          </button>
         ))}
-      </ol>
+      </div>
+
+      {pubTabs.map((g, i) => (
+        <div
+          id={`ppanel-${g.key}`}
+          role="tabpanel"
+          aria-labelledby={`ptab-${g.key}`}
+          class="ppanel"
+          hidden={i !== 0}
+        >
+          <ol class="pub-list">
+            {g.items.map((p) => (
+              <li class="pub-item">
+                <span class="pub-year">{p.year}</span>
+                <a href={p.detail} class="pub-body">
+                  <h3 class="pub-title">{p.title}</h3>
+                  <p class="pub-authors">{p.authors}</p>
+                  <p class="pub-venue">{p.venue}</p>
+                </a>
+              </li>
+            ))}
+          </ol>
+          <a href={g.href} class="link-more ppanel-more">{g.label} {t('home.more')} →</a>
+        </div>
+      ))}
     </div>
   </section>
 )}
+
+<script>
+  const tabs = document.querySelectorAll('.ptab');
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      const id = tab.getAttribute('aria-controls');
+      tabs.forEach((t) => {
+        const on = t === tab;
+        t.classList.toggle('is-active', on);
+        t.setAttribute('aria-selected', String(on));
+        const panel = document.getElementById(t.getAttribute('aria-controls') || '');
+        if (panel) panel.hidden = !on;
+      });
+      void id;
+    });
+  });
+</script>
 
 
 <style>
   /* ---- 3단 요약 ---- */
   .duo {
+    padding-block: clamp(36px, 4.4vw, 52px);
+  }
+  .pubs {
     padding-top: clamp(36px, 4.4vw, 52px);
   }
   .duo-grid {
@@ -315,7 +375,7 @@ const catLabel = (c: string) =>
     max-width: var(--wrap);
     display: grid;
     grid-template-columns: minmax(0, 1fr) clamp(280px, 27.5vw, 352px);
-    gap: clamp(24px, 3vw, 40px);
+    gap: clamp(20px, 2.3vw, 30px);
     align-items: center;
   }
   .hero-main {
@@ -430,7 +490,7 @@ const catLabel = (c: string) =>
     padding: 0;
   }
   .hero-keys li {
-    font-size: 0.79rem;
+    font-size: 0.81rem;
     font-weight: 500;
     color: var(--text-muted);
     background: rgba(255, 255, 255, 0.72);
@@ -544,6 +604,46 @@ const catLabel = (c: string) =>
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
     overflow: hidden;
+  }
+  /* ---- 주요 논문 탭 ---- */
+  .ptabs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 22px;
+  }
+  .ptab {
+    padding: 8px 15px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    border-radius: 999px;
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s ease;
+  }
+  .ptab:hover {
+    border-color: var(--accent-border);
+    color: var(--text);
+  }
+  .ptab.is-active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+  .ppanel-more {
+    display: inline-block;
+    margin-top: 18px;
+    font-size: 0.85rem;
+  }
+  .pub-body:hover .pub-title {
+    color: var(--accent);
+  }
+  .pub-title {
+    transition: color 0.15s ease;
   }
   .pub-item {
     display: grid;

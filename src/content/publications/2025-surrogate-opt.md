@@ -3,7 +3,6 @@ title: "Kriging-Assisted Multi-Objective Optimization of a Flux-Concentrating Ro
 authors: "Y. Choi, M. Kim, and Y.-H. Jung"
 venue: "IEEE Transactions on Magnetics, vol. 61, no. 9, 8203109"
 year: 2025
-type: journal
+type: intl-journal
 doi: "10.1109/TMAG.2025.0000000"
-featured: true
 ---
