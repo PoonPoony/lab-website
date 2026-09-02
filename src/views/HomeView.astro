@@ -21,10 +21,37 @@ const research = filterByLang(await getCollection('research'), lang).sort(
   (a, b) => a.data.order - b.data.order,
 );
 
-const allNews = filterByLang(await getCollection('news'), lang).sort(
-  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
-);
-const news = allNews.slice(0, 3);
+// 공지사항과 갤러리를 합쳐 최신순 4개
+type Feed = {
+  kind: 'news' | 'gallery';
+  slug: string;
+  title: string;
+  date: Date;
+  summary: string;
+  badge: string;
+};
+
+const newsItems: Feed[] = filterByLang(await getCollection('news'), lang).map((p) => ({
+  kind: 'news',
+  slug: p.slug,
+  title: p.data.title,
+  date: p.data.date,
+  summary: p.data.summary,
+  badge: p.data.category,
+}));
+
+const galleryItems: Feed[] = filterByLang(await getCollection('gallery'), lang).map((p) => ({
+  kind: 'gallery',
+  slug: p.slug,
+  title: p.data.title,
+  date: p.data.date,
+  summary: p.data.summary,
+  badge: 'gallery',
+}));
+
+const feed = [...newsItems, ...galleryItems]
+  .sort((a, b) => b.date.valueOf() - a.date.valueOf())
+  .slice(0, 4);
 
 const pubs = await getCollection('publications');
 const featured = [...pubs]
@@ -40,7 +67,7 @@ const catLabel = (c: string) =>
     notice: t('news.notice'),
     award: t('news.award'),
     event: t('news.event'),
-    gallery: t('news.gallery'),
+    gallery: t('gallery.title'),
   })[c] ?? c;
 ---
 
@@ -104,75 +131,69 @@ const catLabel = (c: string) =>
   </div>
 </section>
 
-<!-- ================= 연구 분야 ================= -->
-{research.length > 0 && (
-  <section class="section">
-    <div class="wrap">
-      <div class="section-head">
-        <div>
+<!-- ================= 연구 분야 + 최근 소식 (2단) ================= -->
+<section class="section duo">
+  <div class="wrap">
+    <div class="duo-grid">
+
+      <div class="tcol">
+        <div class="tcol-head">
           <p class="eyebrow">Research</p>
-          <h2 class="h-section">{t('home.research.title')}</h2>
-          <p class="lead">{t('home.research.desc')}</p>
+          <h2 class="tcol-title">{t('home.research.title')}</h2>
+          <a href={path('/research')} class="link-more">{t('home.more')} →</a>
         </div>
-        <a href={path('/research')} class="link-more">{t('home.more')} →</a>
+        <ul class="tlist">
+          {research.slice(0, 4).map((item, i) => (
+            <li class="titem">
+              <span class="tnum">{String(i + 1).padStart(2, '0')}</span>
+              <div>
+                <h3 class="ttitle">{item.data.title}</h3>
+                <p class="tsummary">{item.data.summary}</p>
+                {item.data.keywords.length > 0 && (
+                  <ul class="kw-list">
+                    {item.data.keywords.slice(0, 3).map((k) => <li class="tag">{k}</li>)}
+                  </ul>
+                )}
+              </div>
+            </li>
+          ))}
+        </ul>
       </div>
 
-      <div class="grid research-grid">
-        {research.slice(0, 6).map((item, i) => (
-          <article class="card research-card">
-            <span class="research-num">{String(i + 1).padStart(2, '0')}</span>
-            <h3 class="research-title">{item.data.title}</h3>
-            <p class="research-summary">{item.data.summary}</p>
-            {item.data.keywords.length > 0 && (
-              <ul class="kw-list">
-                {item.data.keywords.slice(0, 3).map((k) => (
-                  <li class="tag">{k}</li>
-                ))}
-              </ul>
-            )}
-          </article>
-        ))}
-      </div>
-    </div>
-  </section>
-)}
-
-<!-- ================= 최근 소식 ================= -->
-{news.length > 0 && (
-  <section class="section section--soft">
-    <div class="wrap">
-      <div class="section-head">
-        <div>
+      <div class="tcol">
+        <div class="tcol-head">
           <p class="eyebrow">News</p>
-          <h2 class="h-section">{t('home.news.title')}</h2>
+          <h2 class="tcol-title">{t('home.news.title')}</h2>
+          <span class="tcol-links">
+            <a href={path('/news')} class="link-more">{t('nav.news')} →</a>
+            <a href={path('/gallery')} class="link-more">{t('nav.gallery')} →</a>
+          </span>
         </div>
-        <a href={path('/news')} class="link-more">{t('home.more')} →</a>
+        <ul class="tlist">
+          {feed.map((item) => (
+            <li class="titem titem--link">
+              <a href={`${path(item.kind === 'gallery' ? '/gallery' : '/news')}${item.slug}/`}>
+                <div class="tnews-meta">
+                  <span class:list={['tag', item.kind === 'gallery' ? 'tag--gallery' : 'tag--accent']}>
+                    {catLabel(item.badge)}
+                  </span>
+                  <time datetime={item.date.toISOString()}>{formatDate(item.date, lang)}</time>
+                </div>
+                <h3 class="ttitle">{item.title}</h3>
+                {item.summary && <p class="tsummary">{item.summary}</p>}
+              </a>
+            </li>
+          ))}
+        </ul>
       </div>
 
-      <div class="grid grid--3">
-        {news.map((post) => (
-          <a href={`${path('/news')}${post.slug}/`} class="card news-card">
-            {post.data.thumbnail && (
-              <img class="news-thumb" src={post.data.thumbnail} alt="" loading="lazy" />
-            )}
-            <div class="news-meta">
-              <span class="tag tag--accent">{catLabel(post.data.category)}</span>
-              <time datetime={post.data.date.toISOString()}>
-                {formatDate(post.data.date, lang)}
-              </time>
-            </div>
-            <h3 class="news-title">{post.data.title}</h3>
-            {post.data.summary && <p class="news-summary">{post.data.summary}</p>}
-          </a>
-        ))}
-      </div>
     </div>
-  </section>
-)}
+  </div>
+</section>
 
-<!-- ================= 주요 논문 ================= -->
+<!-- ================= 주요 논문 (전체 폭) ================= -->
 {featured.length > 0 && (
-  <section class="section">
+  <section class="section section--soft">
     <div class="wrap">
       <div class="section-head">
         <div>
@@ -216,6 +237,105 @@ const catLabel = (c: string) =>
 </section>
 
 <style>
+  /* ---- 3단 요약 ---- */
+  .duo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 56px;
+  }
+  .tcol-head {
+    padding-bottom: 14px;
+    margin-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .tcol-title {
+    font-size: 1.25rem;
+    margin-bottom: 2px;
+  }
+  .tcol-head .link-more {
+    position: absolute;
+    right: 0;
+    bottom: 14px;
+    font-size: 0.82rem;
+  }
+  .tcol-links {
+    position: absolute;
+    right: 0;
+    bottom: 14px;
+    display: flex;
+    gap: 16px;
+  }
+  .tcol-links .link-more {
+    position: static;
+  }
+  .tag--gallery {
+    background: var(--bg-inset);
+    color: var(--text-muted);
+    border-color: var(--border-strong);
+  }
+  .tlist {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+  }
+  .titem {
+    display: grid;
+    grid-template-columns: 46px 1fr;
+    gap: 12px;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .titem--link {
+    display: block;
+  }
+  .titem:last-child { border-bottom: none; }
+  .tnum {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+    padding-top: 2px;
+  }
+  .ttitle {
+    font-size: 0.95rem;
+    line-height: 1.45;
+    margin-bottom: 4px;
+  }
+  .ttitle--pub { font-weight: 600; font-size: 0.9rem; }
+  .ttitle a:hover { color: var(--accent); }
+  .tmeta {
+    font-size: 0.82rem;
+    color: var(--text-faint);
+    margin: 0;
+  }
+  .tnews-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.76rem;
+    color: var(--text-faint);
+    margin-bottom: 7px;
+  }
+  .titem--link a:hover .ttitle { color: var(--accent); }
+
+  .tsummary {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    margin: 0 0 9px;
+  }
+  .titem .kw-list {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .titem--link a:hover .tsummary { color: var(--text-muted); }
+
+  @media (max-width: 880px) {
+    .duo-grid { grid-template-columns: 1fr; gap: 44px; }
+  }
+
   /* ---- hero ---- */
   .hero {
     position: relative;
@@ -265,9 +385,10 @@ const catLabel = (c: string) =>
     max-width: 54ch;
     color: rgba(255, 255, 255, 0.72);
     font-size: 1rem;
-    margin-bottom: 30px;
+    margin-bottom: 18px;
   }
-  .hero-keys {                  /* ← 여기부터 새로 추가 */
+
+  .hero-keys {
     list-style: none;
     display: flex;
     flex-wrap: wrap;
@@ -283,7 +404,7 @@ const catLabel = (c: string) =>
     border: 1px solid rgba(255, 255, 255, 0.16);
     border-radius: 999px;
     padding: 5px 13px;
-  } 
+  }
   .hero-actions {
     display: flex;
     flex-wrap: wrap;
@@ -345,12 +466,20 @@ const catLabel = (c: string) =>
     flex-direction: column;
     position: relative;
   }
+  .research-card {
+    border-top: 3px solid var(--accent);
+  }
   .research-num {
     font-size: 0.76rem;
     font-weight: 700;
     letter-spacing: 0.1em;
     color: var(--accent);
     margin-bottom: 12px;
+  }
+  .research-card .tag {
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-color: var(--accent-border);
   }
   .research-title {
     font-size: 1.08rem;
