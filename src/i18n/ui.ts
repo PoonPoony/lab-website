@@ -106,6 +106,7 @@ export const ui = {
     'contact.join.desc':
       '전기기기 설계와 해석에 관심 있는 학생은 언제든 메일로 연락 주세요.',
     'contact.join.cta': '메일 보내기',
+    'contact.join.badge': '상시 모집',
 
     'footer.rights': '모든 권리 보유.',
     'lang.switch': 'English',
