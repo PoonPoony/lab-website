@@ -71,17 +71,28 @@ const catLabel = (c: string) =>
 <section class="hero">
 
   <div class="wrap hero-inner">
-    <div class="hero-headline">
-      <span class="hero-logo"><img src="/logo1.png" alt="" /></span>
-      <div class="hero-headline-text">
-        <p class="hero-eyebrow">{s.university}</p>
-        <h1 class="hero-title">{s.labName}</h1>
-        <p class="hero-tagline">{s.tagline}</p>
+    <div class="hero-main">
+      <div class="hero-headline">
+        <span class="hero-logo"><img src="/logo1.png" alt="" /></span>
+        <div class="hero-headline-text">
+          <p class="hero-eyebrow">{s.university}</p>
+          <h1 class="hero-title">{s.labName}</h1>
+          <p class="hero-tagline">{s.tagline}</p>
+        </div>
       </div>
+      <ul class="hero-keys">
+        {s.keywords.map((k) => <li>{k}</li>)}
+      </ul>
     </div>
-    <ul class="hero-keys">
-      {s.keywords.map((k) => <li>{k}</li>)}
-    </ul>
+
+    <aside class="hero-join">
+      <p class="hero-join-badge">{t('contact.join.badge')}</p>
+      <h2 class="hero-join-title">{t('contact.join.title')}</h2>
+      <p class="hero-join-desc">{t('contact.join.desc')}</p>
+      <a href={`mailto:${s.email}`} class="btn btn--primary hero-join-cta">
+        {t('contact.join.cta')} →
+      </a>
+    </aside>
   </div>
 
 </section>
@@ -180,16 +191,6 @@ const catLabel = (c: string) =>
   </section>
 )}
 
-<!-- ================= 학생 모집 CTA ================= -->
-<section class="section join">
-  <div class="wrap join-inner">
-    <div>
-      <h2 class="join-title">{t('contact.join.title')}</h2>
-      <p class="join-desc">{t('contact.join.desc')}</p>
-    </div>
-    <a href={`mailto:${s.email}`} class="btn btn--primary">{t('contact.join.cta')} →</a>
-  </div>
-</section>
 
 <style>
   /* ---- 3단 요약 ---- */
@@ -306,12 +307,64 @@ const catLabel = (c: string) =>
     background: linear-gradient(168deg, #E8EFF7 0%, #CFDCEA 100%);
     color: var(--text);
     border-bottom: 1px solid var(--border);
-    padding-block: clamp(44px, 5.8vw, 68px);
+    padding-block: clamp(40px, 4.6vw, 56px) clamp(39px, 4.5vw, 55px);
     overflow: hidden;
   }
   .hero-inner {
     position: relative;
     max-width: var(--wrap);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) clamp(268px, 23vw, 300px);
+    gap: clamp(24px, 3vw, 40px);
+    align-items: center;
+  }
+  .hero-main {
+    min-width: 0;
+  }
+
+  /* ---- 히어로 안 학생 모집 카드 ---- */
+  .hero-join {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: rgba(255, 255, 255, 0.78);
+    padding: 18px 20px 16px;
+    box-shadow: 0 10px 28px rgba(20, 34, 58, 0.07);
+  }
+  .hero-join-badge {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border: 1px solid var(--accent-border);
+    border-radius: 999px;
+    padding: 3px 10px;
+    margin-bottom: 9px;
+  }
+  .hero-join-title {
+    font-size: 1rem;
+    line-height: 1.42;
+    margin-bottom: 5px;
+  }
+  .hero-join-desc {
+    font-size: 0.85rem;
+    line-height: 1.55;
+    color: var(--text-muted);
+    margin: 0 0 10px;
+  }
+  .hero-join-cta {
+    width: 100%;
+    justify-content: center;
+    padding-block: 10px;
+    font-size: 0.88rem;
+  }
+
+  @media (max-width: 900px) {
+    .hero-inner {
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
   }
   .hero-eyebrow {
     font-size: 0.84rem;
@@ -372,18 +425,19 @@ const catLabel = (c: string) =>
     list-style: none;
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 7px;
     margin: 0;
     padding: 0;
   }
   .hero-keys li {
-    font-size: 0.83rem;
+    font-size: 0.79rem;
     font-weight: 500;
     color: var(--text-muted);
     background: rgba(255, 255, 255, 0.72);
     border: 1px solid var(--border);
     border-radius: 999px;
-    padding: 5px 13px;
+    padding: 4px 11px;
+    white-space: nowrap;
   }
 
 
@@ -528,27 +582,6 @@ const catLabel = (c: string) =>
     margin: 0;
   }
 
-  /* ---- CTA ---- */
-  .join {
-    border-top: 1px solid var(--border);
-    background: var(--bg-soft);
-  }
-  .join-inner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 28px;
-    flex-wrap: wrap;
-  }
-  .join-title {
-    font-size: clamp(1.3rem, 2.6vw, 1.7rem);
-    margin-bottom: 8px;
-  }
-  .join-desc {
-    color: var(--text-muted);
-    max-width: 54ch;
-    margin: 0;
-  }
 
   @media (max-width: 560px) {
     .pub-item {
