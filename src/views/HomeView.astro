@@ -100,13 +100,15 @@ const catLabel = (c: string) =>
     </svg>
   </div>
 
-  <div class="wrap hero-inner">
-    <p class="hero-eyebrow">{s.university}</p>
+  <div class="wrap hero-inner">    
     <div class="hero-headline">
       <span class="hero-logo"><img src="/logo1.png" alt="" /></span>
-      <h1 class="hero-title">{s.labName}</h1>
-    </div>
-    <p class="hero-tagline">{s.tagline}</p>
+      <div class="hero-headline-text">
+        <p class="hero-eyebrow">{s.university}</p>
+        <h1 class="hero-title">{s.labName}</h1>
+        <p class="hero-tagline">{s.tagline}</p>
+      </div>
+    </div>    
     <ul class="hero-keys">
       {s.keywords.map((k) => <li>{k}</li>)}
     </ul>
