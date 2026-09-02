@@ -58,10 +58,6 @@ const featured = [...pubs]
   .sort((a, b) => Number(b.data.featured) - Number(a.data.featured) || b.data.year - a.data.year)
   .slice(0, 4);
 
-const members = filterByLang(await getCollection('members'), lang).filter(
-  (m) => m.data.role !== 'alumni',
-);
-
 const catLabel = (c: string) =>
   ({
     notice: t('news.notice'),
@@ -88,22 +84,6 @@ const catLabel = (c: string) =>
     </ul>
   </div>
 
-  <div class="wrap">
-    <dl class="stats">
-      <div>
-        <dt>{t('home.stat.pubs')}</dt>
-        <dd>{pubs.length}</dd>
-      </div>
-      <div>
-        <dt>{t('home.stat.members')}</dt>
-        <dd>{members.length}</dd>
-      </div>
-      <div>
-        <dt>{t('home.stat.areas')}</dt>
-        <dd>{research.length}</dd>
-      </div>
-    </dl>
-  </div>
 </section>
 
 <!-- ================= 연구 분야 + 최근 소식 (2단) ================= -->
@@ -317,7 +297,7 @@ const catLabel = (c: string) =>
     background: linear-gradient(168deg, #E8EFF7 0%, #CFDCEA 100%);
     color: var(--text);
     border-bottom: 1px solid var(--border);
-    padding-block: clamp(40px, 5.5vw, 64px) 0;
+    padding-block: clamp(44px, 5.8vw, 68px);
     overflow: hidden;
   }
   .hero-inner {
@@ -397,34 +377,6 @@ const catLabel = (c: string) =>
     padding: 5px 13px;
   }
 
-  .stats {
-    position: relative;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0;
-    margin: clamp(28px, 3.6vw, 40px) 0 0;
-    border-top: 1px solid var(--border);
-  }
-  .stats > div {
-    padding: 22px 4px 26px;
-  }
-  .stats > div + div {
-    border-left: 1px solid var(--border);
-    padding-left: 20px;
-  }
-  .stats dt {
-    font-size: 0.78rem;
-    color: var(--text-faint);
-    letter-spacing: 0.04em;
-    margin-bottom: 4px;
-  }
-  .stats dd {
-    margin: 0;
-    font-size: clamp(1.6rem, 3.4vw, 2.1rem);
-    font-weight: 700;
-    color: var(--ink);
-    font-variant-numeric: tabular-nums;
-  }
 
   /* ---- 공통 섹션 헤더 ---- */
   .section-head {
