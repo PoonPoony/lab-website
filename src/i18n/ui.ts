@@ -175,6 +175,7 @@ export const ui = {
     'contact.join.desc':
       'If you are interested in electric machine design and analysis, feel free to reach out by email.',
     'contact.join.cta': 'Send an email',
+    'contact.join.badge': 'Always recruiting',
 
     'footer.rights': 'All rights reserved.',
     'lang.switch': '한국어',
