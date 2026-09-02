@@ -31,11 +31,11 @@ i18n:
 
 collections:
   # ---------------------------------------------------------
-  # 공지사항 · 갤러리
+  # 공지사항
   # ---------------------------------------------------------
   - name: news
-    label: 공지사항 · 갤러리
-    label_singular: 글
+    label: 공지사항
+    label_singular: 공지
     folder: src/content/news
     create: true
     slug: '{{year}}-{{month}}-{{day}}-{{slug}}'
@@ -53,17 +53,34 @@ collections:
           - { label: 공지, value: notice }
           - { label: 수상, value: award }
           - { label: 행사, value: event }
-          - { label: 갤러리, value: gallery }
       - { name: pinned, label: 상단 고정, widget: boolean, default: false, required: false, i18n: duplicate }
       - { name: summary, label: 한 줄 요약, widget: text, required: false, i18n: true }
       - { name: thumbnail, label: 대표 사진, widget: image, required: false, i18n: duplicate }
-      - name: gallery
-        label: 갤러리 사진
+      - { name: body, label: 본문, widget: markdown, i18n: true }
+
+  # ---------------------------------------------------------
+  # 갤러리 (사진 앨범)
+  # ---------------------------------------------------------
+  - name: gallery
+    label: 갤러리
+    label_singular: 앨범
+    folder: src/content/gallery
+    create: true
+    slug: '{{year}}-{{month}}-{{day}}-{{slug}}'
+    sortable_fields: [date, title]
+    i18n: true
+    fields:
+      - { name: title, label: 제목, widget: string, i18n: true }
+      - { name: date, label: 날짜, widget: datetime, format: 'YYYY-MM-DD', date_format: 'YYYY-MM-DD', time_format: false, i18n: duplicate }
+      - { name: summary, label: 한 줄 설명, widget: text, required: false, i18n: true }
+      - { name: cover, label: 대표 사진, widget: image, required: false, i18n: duplicate }
+      - name: photos
+        label: 사진
         widget: list
         required: false
         i18n: duplicate
         field: { name: image, label: 사진, widget: image }
-      - { name: body, label: 본문, widget: markdown, i18n: true }
+      - { name: body, label: 설명 (선택), widget: markdown, required: false, i18n: true }
 
   # ---------------------------------------------------------
   # 구성원
