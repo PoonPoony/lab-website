@@ -193,10 +193,18 @@ const catLabel = (c: string) =>
 
 <style>
   /* ---- 3단 요약 ---- */
+  .duo {
+    padding-top: clamp(36px, 4.4vw, 52px);
+  }
   .duo-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 56px;
+    align-items: stretch;
+  }
+  .tcol {
+    display: flex;
+    flex-direction: column;
   }
   .tcol-head {
     padding-bottom: 14px;
@@ -231,12 +239,14 @@ const catLabel = (c: string) =>
   }
   .tlist {
     list-style: none;
-    display: flex;
-    flex-direction: column;
+    flex: 1;
+    display: grid;
+    grid-template-rows: repeat(4, 1fr);
   }
   .titem {
     display: grid;
     grid-template-columns: 46px 1fr;
+    align-content: start;
     gap: 12px;
     padding: 15px 0;
     border-bottom: 1px solid var(--border);
@@ -244,7 +254,6 @@ const catLabel = (c: string) =>
   .titem--link {
     display: block;
   }
-  .titem:last-child { border-bottom: none; }
   .tnum {
     font-size: 0.78rem;
     font-weight: 700;
