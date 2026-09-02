@@ -1,0 +1,153 @@
+---
+import { render, type CollectionEntry } from 'astro:content';
+import { useT, usePath, type Lang } from '../i18n/utils';
+import { catByKey } from '../i18n/pubs';
+
+interface Props {
+  lang: Lang;
+  entry: CollectionEntry<'publications'>;
+}
+const { lang, entry } = Astro.props;
+const t = useT(lang);
+const path = usePath(lang);
+const { Content } = await render(entry);
+
+const cat = catByKey(entry.data.type)!;
+const base = path('/publications');
+const listHref = cat.key === 'intl-journal' ? base : `${base}${cat.slug}/`;
+
+const hasBody = (entry.body ?? '').trim().length > 0;
+const doiUrl = entry.data.doi
+  ? `https://doi.org/${entry.data.doi.replace(/^https?:\/\/doi\.org\//, '')}`
+  : '';
+---
+
+<article class="pub-page">
+  <header class="page-head">
+    <div class="wrap wrap-narrow">
+      <a href={listHref} class="back">← {t('pubs.back')}</a>
+      <div class="pub-meta-top">
+        <span class="tag tag--accent">{t(cat.labelKey)}</span>
+        <span>{entry.data.year}</span>
+      </div>
+      <h1 class="pub-h1">{entry.data.title}</h1>
+    </div>
+  </header>
+
+  <div class="section">
+    <div class="wrap wrap-narrow">
+      <dl class="pub-facts">
+        <div>
+          <dt>{t('pubs.authors')}</dt>
+          <dd>{entry.data.authors}</dd>
+        </div>
+        <div>
+          <dt>{t('pubs.venue')}</dt>
+          <dd>{entry.data.venue}</dd>
+        </div>
+        {entry.data.doi && (
+          <div>
+            <dt>DOI</dt>
+            <dd>
+              <a href={doiUrl} target="_blank" rel="noopener noreferrer">{entry.data.doi}</a>
+            </dd>
+          </div>
+        )}
+      </dl>
+
+      {hasBody && (
+        <div class="prose pub-prose">
+          <Content />
+        </div>
+      )}
+
+      {entry.data.link && (
+        <a
+          href={entry.data.link}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn btn--primary pub-cta"
+        >
+          {t('pubs.link')} →
+        </a>
+      )}
+
+      <a href={listHref} class="btn btn--ghost back-btn">← {t('pubs.back')}</a>
+    </div>
+  </div>
+</article>
+
+<style>
+  .back {
+    display: inline-block;
+    font-size: 0.86rem;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 18px;
+  }
+  .back:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .pub-meta-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.84rem;
+    color: var(--text-faint);
+    margin-bottom: 14px;
+    font-variant-numeric: tabular-nums;
+  }
+  .pub-h1 {
+    font-size: clamp(1.4rem, 3.2vw, 1.95rem);
+    line-height: 1.35;
+  }
+
+  .pub-facts {
+    display: grid;
+    gap: 0;
+    margin: 0 0 32px;
+    border-top: 1px solid var(--border);
+  }
+  .pub-facts > div {
+    display: grid;
+    grid-template-columns: 96px 1fr;
+    gap: 16px;
+    padding: 13px 2px;
+    border-bottom: 1px solid var(--border);
+  }
+  .pub-facts dt {
+    font-size: 0.82rem;
+    color: var(--text-faint);
+  }
+  .pub-facts dd {
+    margin: 0;
+    font-size: 0.92rem;
+  }
+  .pub-facts a {
+    color: var(--accent);
+  }
+  .pub-facts a:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .pub-prose {
+    margin-bottom: 30px;
+  }
+  .pub-cta {
+    margin-top: 0;
+  }
+  .back-btn {
+    display: block;
+    width: fit-content;
+    margin-top: 40px;
+  }
+
+  @media (max-width: 520px) {
+    .pub-facts > div {
+      grid-template-columns: 1fr;
+      gap: 4px;
+    }
+  }
+</style>
