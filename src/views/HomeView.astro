@@ -233,18 +233,34 @@ const catLabel = (c: string) =>
 
 <script>
   const tabs = document.querySelectorAll('.ptab');
-  tabs.forEach((tab) => {
-    tab.addEventListener('click', () => {
-      const id = tab.getAttribute('aria-controls');
-      tabs.forEach((t) => {
-        const on = t === tab;
-        t.classList.toggle('is-active', on);
-        t.setAttribute('aria-selected', String(on));
-        const panel = document.getElementById(t.getAttribute('aria-controls') || '');
-        if (panel) panel.hidden = !on;
-      });
-      void id;
+  let hoverTimer = 0;
+
+  function activate(tab: Element) {
+    tabs.forEach((t) => {
+      const on = t === tab;
+      t.classList.toggle('is-active', on);
+      t.setAttribute('aria-selected', String(on));
+      const panel = document.getElementById(t.getAttribute('aria-controls') || '');
+      if (panel) panel.hidden = !on;
     });
+  }
+
+  tabs.forEach((tab) => {
+    // 클릭 — 터치 기기에서는 이쪽만 동작합니다.
+    tab.addEventListener('click', () => {
+      window.clearTimeout(hoverTimer);
+      activate(tab);
+    });
+
+    // 마우스를 올리면 전환. 지나가듯 스쳐도 바뀌지 않도록 잠깐 기다립니다.
+    tab.addEventListener('mouseenter', () => {
+      window.clearTimeout(hoverTimer);
+      hoverTimer = window.setTimeout(() => activate(tab), 120);
+    });
+    tab.addEventListener('mouseleave', () => window.clearTimeout(hoverTimer));
+
+    // 키보드로 탭 이동할 때도 같이 바뀌게
+    tab.addEventListener('focus', () => activate(tab));
   });
 </script>
 
