@@ -2,10 +2,12 @@
 import { getCollection } from 'astro:content';
 import Base from '../../../layouts/Base.astro';
 import PublicationPostView from '../../../views/PublicationPostView.astro';
-import { catByKey } from '../../../i18n/pubs';
+import { catByKey, PROJECT_KEY } from '../../../i18n/pubs';
 
 export async function getStaticPaths() {
-  const pubs = await getCollection('publications');
+  const pubs = (await getCollection('publications')).filter(
+    (e) => e.data.type !== PROJECT_KEY,
+  );
   return pubs.map((entry) => ({
     params: { category: catByKey(entry.data.type)!.slug, slug: entry.id },
     props: { entry },

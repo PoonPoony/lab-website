@@ -1,7 +1,7 @@
 ---
 import { render, type CollectionEntry } from 'astro:content';
 import { useT, usePath, type Lang } from '../i18n/utils';
-import { catByKey } from '../i18n/pubs';
+import { PUB_CATEGORIES, PROJECT_KEY, listHref } from '../i18n/pubs';
 
 interface Props {
   lang: Lang;
@@ -12,9 +12,10 @@ const t = useT(lang);
 const path = usePath(lang);
 const { Content } = await render(entry);
 
-const cat = catByKey(entry.data.type)!;
-const base = path('/publications');
-const listHref = cat.key === 'intl-journal' ? base : `${base}${cat.slug}/`;
+const isProject = entry.data.type === PROJECT_KEY;
+const cat = PUB_CATEGORIES.find((c) => c.key === entry.data.type);
+const catLabel = isProject ? t('projects.title') : t(cat!.labelKey);
+const backHref = listHref(entry.data.type, path);
 
 const hasBody = (entry.body ?? '').trim().length > 0;
 const doiUrl = entry.data.doi
@@ -25,9 +26,9 @@ const doiUrl = entry.data.doi
 <article class="pub-page">
   <header class="page-head">
     <div class="wrap wrap-narrow">
-      <a href={listHref} class="back">← {t('pubs.back')}</a>
+      <a href={backHref} class="back">← {t('pubs.back')}</a>
       <div class="pub-meta-top">
-        <span class="tag tag--accent">{t(cat.labelKey)}</span>
+        <span class="tag tag--accent">{catLabel}</span>
         <span>{entry.data.year}</span>
       </div>
       <h1 class="pub-h1">{entry.data.title}</h1>
@@ -72,7 +73,7 @@ const doiUrl = entry.data.doi
         </a>
       )}
 
-      <a href={listHref} class="btn btn--ghost back-btn">← {t('pubs.back')}</a>
+      <a href={backHref} class="btn btn--ghost back-btn">← {t('pubs.back')}</a>
     </div>
   </div>
 </article>

@@ -1,20 +1,27 @@
 ---
 import { getCollection } from 'astro:content';
 import { useT, usePath, type Lang } from '../i18n/utils';
-import { PUB_CATEGORIES, catByKey, type PubKey } from '../i18n/pubs';
+import { PUB_CATEGORIES, listHref, detailBase, type PubKey } from '../i18n/pubs';
 
 interface Props {
   lang: Lang;
   category: PubKey;
+  /** 과제 목록처럼 하위탭이 없는 화면에 씁니다. */
+  standalone?: boolean;
+  titleKey?: string;
+  descKey?: string;
+  emptyKey?: string;
 }
-const { lang, category } = Astro.props;
+const {
+  lang,
+  category,
+  standalone = false,
+  titleKey = 'pubs.title',
+  descKey = 'pubs.desc',
+  emptyKey = 'pubs.empty',
+} = Astro.props;
 const t = useT(lang);
 const path = usePath(lang);
-
-const base = path('/publications');
-// 국제학술지는 /publications/ 가 대표 주소입니다.
-const hrefFor = (key: string) =>
-  key === 'intl-journal' ? base : `${base}${catByKey(key)!.slug}/`;
 
 const all = await getCollection('publications');
 const pubs = all
@@ -22,23 +29,24 @@ const pubs = all
   .sort((a, b) => b.data.year - a.data.year || a.data.title.localeCompare(b.data.title));
 
 const years = [...new Set(pubs.map((p) => p.data.year))].sort((a, b) => b - a);
-const detailBase = `${base}${catByKey(category)!.slug}/`;
+const itemBase = detailBase(category, path);
 ---
 
 <section class="page-head">
   <div class="wrap">
-    <p class="eyebrow">Publications</p>
-    <h1>{t('pubs.title')}</h1>
-    <p class="lead">{t('pubs.desc')}</p>
+    <p class="eyebrow">{standalone ? 'Projects' : 'Publications'}</p>
+    <h1>{t(titleKey)}</h1>
+    <p class="lead">{t(descKey)}</p>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
+    {!standalone && (
     <nav class="pub-tabs scroll-x" aria-label={t('pubs.title')}>
       {PUB_CATEGORIES.map((c) => (
         <a
-          href={hrefFor(c.key)}
+          href={listHref(c.key, path)}
           class:list={['pub-tab', { 'is-active': c.key === category }]}
           aria-current={c.key === category ? 'page' : undefined}
         >
@@ -47,9 +55,10 @@ const detailBase = `${base}${catByKey(category)!.slug}/`;
         </a>
       ))}
     </nav>
+    )}
 
     {pubs.length === 0 ? (
-      <p class="empty">{t('pubs.empty')}</p>
+      <p class="empty">{t(emptyKey)}</p>
     ) : (
       <div class="years">
         {years.map((year) => (
@@ -60,7 +69,7 @@ const detailBase = `${base}${catByKey(category)!.slug}/`;
                 .filter((p) => p.data.year === year)
                 .map((p) => (
                   <li class="pub-item">
-                    <a href={`${detailBase}${p.id}/`} class="pub-link">
+                    <a href={`${itemBase}${p.id}/`} class="pub-link">
                       <h3 class="pub-title">{p.data.title}</h3>
                       <p class="pub-authors">{p.data.authors}</p>
                       <p class="pub-venue">{p.data.venue}</p>
