@@ -1,0 +1,242 @@
+---
+import { getCollection } from 'astro:content';
+import { useT, filterByLang, type Lang } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useT(lang);
+
+const all = filterByLang(await getCollection('members'), lang);
+
+const groups = [
+  { role: 'professor', label: t('members.professor') },
+  { role: 'postdoc', label: t('members.postdoc') },
+  { role: 'phd', label: t('members.phd') },
+  { role: 'ms', label: t('members.ms') },
+  { role: 'undergrad', label: t('members.undergrad') },
+  { role: 'alumni', label: t('members.alumni') },
+]
+  .map((g) => ({
+    ...g,
+    people: all
+      .filter((m) => m.data.role === g.role)
+      .sort((a, b) => a.data.order - b.data.order || a.data.name.localeCompare(b.data.name)),
+  }))
+  .filter((g) => g.people.length > 0);
+
+const initials = (name: string) =>
+  /[가-힣]/.test(name) ? name.slice(-2) : name.split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase();
+---
+
+<section class="page-head">
+  <div class="wrap">
+    <p class="eyebrow">Members</p>
+    <h1>{t('members.title')}</h1>
+    <p class="lead">{t('members.desc')}</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    {groups.map((group) => (
+      <div class="group">
+        <h2 class="group-title">
+          {group.label}
+          <span class="group-count">{group.people.length}</span>
+        </h2>
+
+        {group.role === 'alumni' ? (
+          <ul class="alumni-list">
+            {group.people.map((m) => (
+              <li class="alumni-item">
+                <strong>{m.data.name}</strong>
+                {m.data.position && <span> · {m.data.position}</span>}
+                {m.data.topic && <span class="alumni-topic">{m.data.topic}</span>}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <div class:list={['people', { 'people--lead': group.role === 'professor' }]}>
+            {group.people.map((m) => (
+              <article class:list={['card', 'person', { 'person--lead': group.role === 'professor' }]}>
+                <div class="avatar">
+                  {m.data.photo ? (
+                    <img src={m.data.photo} alt={m.data.name} loading="lazy" />
+                  ) : (
+                    <span aria-hidden="true">{initials(m.data.name)}</span>
+                  )}
+                </div>
+                <div class="person-body">
+                  <h3 class="person-name">{m.data.name}</h3>
+                  {m.data.position && <p class="person-position">{m.data.position}</p>}
+                  {m.data.topic && (
+                    <p class="person-topic">
+                      <span class="person-topic-label">{t('members.topic')}</span>
+                      {m.data.topic}
+                    </p>
+                  )}
+                  <div class="person-links">
+                    {m.data.email && (
+                      <a href={`mailto:${m.data.email}`} class="person-link">{m.data.email}</a>
+                    )}
+                    {m.data.links.map((l) => (
+                      <a href={l.url} class="person-link" target="_blank" rel="noopener noreferrer">
+                        {l.label} ↗
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  .group + .group {
+    margin-top: clamp(40px, 6vw, 60px);
+  }
+  .group-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.1rem;
+    padding-bottom: 12px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .group-count {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-faint);
+    background: var(--bg-inset);
+    border-radius: 999px;
+    padding: 2px 9px;
+  }
+
+  /* 인원이 적어도 허전해 보이지 않도록 카드 최대 폭을 제한하고 왼쪽부터 채웁니다. */
+  .people {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .people > * {
+    flex: 1 1 216px;
+    max-width: 296px;
+  }
+  .people--lead > * {
+    flex: 1 1 340px;
+    max-width: 440px;
+  }
+
+  .person {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 22px;
+  }
+  .person--lead {
+    flex-direction: row;
+    gap: 22px;
+    padding: 26px;
+  }
+
+  .avatar {
+    width: 74px;
+    height: 74px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    background: var(--accent-soft);
+    border: 1px solid var(--accent-border);
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 1.1rem;
+  }
+  .person--lead .avatar {
+    width: 96px;
+    height: 96px;
+    font-size: 1.4rem;
+  }
+  .avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .person-name {
+    font-size: 1.02rem;
+    margin-bottom: 3px;
+  }
+  .person--lead .person-name {
+    font-size: 1.2rem;
+  }
+  .person-position {
+    font-size: 0.85rem;
+    color: var(--accent);
+    font-weight: 600;
+    margin: 0 0 8px;
+  }
+  .person-topic {
+    font-size: 0.87rem;
+    color: var(--text-muted);
+    margin: 0 0 10px;
+  }
+  .person-topic-label {
+    display: block;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 2px;
+  }
+  .person-links {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .person-link {
+    font-size: 0.81rem;
+    color: var(--text-faint);
+    word-break: break-all;
+  }
+  .person-link:hover {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .alumni-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 10px 26px;
+  }
+  .alumni-item {
+    font-size: 0.92rem;
+    color: var(--text-muted);
+    padding: 9px 0;
+    border-bottom: 1px dashed var(--border);
+  }
+  .alumni-item strong {
+    color: var(--text);
+  }
+  .alumni-topic {
+    display: block;
+    font-size: 0.82rem;
+    color: var(--text-faint);
+  }
+
+  @media (max-width: 480px) {
+    .person--lead {
+      flex-direction: column;
+    }
+  }
+</style>

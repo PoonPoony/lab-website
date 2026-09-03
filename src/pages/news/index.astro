@@ -1,0 +1,11 @@
+---
+import Base from '../../layouts/Base.astro';
+import NewsListView from '../../views/NewsListView.astro';
+import { useT } from '../../i18n/utils';
+const lang = 'ko' as const;
+const t = useT(lang);
+---
+
+<Base lang={lang} title={t('news.title')} current="news">
+  <NewsListView lang={lang} />
+</Base>
