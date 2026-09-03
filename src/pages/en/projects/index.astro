@@ -1,0 +1,17 @@
+---
+import Base from '../../../layouts/Base.astro';
+import PublicationListView from '../../../views/PublicationListView.astro';
+import { useT } from '../../../i18n/utils';
+const lang = 'en' as const;
+const t = useT(lang);
+---
+<Base lang={lang} title={t('projects.title')} current="projects">
+  <PublicationListView
+    lang={lang}
+    category="project"
+    standalone
+    titleKey="projects.title"
+    descKey="projects.desc"
+    emptyKey="projects.empty"
+  />
+</Base>
