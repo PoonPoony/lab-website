@@ -15,8 +15,8 @@ backend:
   # auth_endpoint: auth
 
 # 글을 저장하면 GitHub에 남는 커밋 메시지
-site_url: https://lab-website.yhjung105.workers.dev/ # ← 배포 후 실제 주소로 수정
-display_url: https://lab-website.yhjung105.workers.dev/ # ← 배포 후 실제 주소로 수정
+site_url: https://lab-website.yhjung105.workers.dev # ← 배포 후 실제 주소로 수정
+display_url: https://lab-website.yhjung105.workers.dev # ← 배포 후 실제 주소로 수정
 publish_mode: simple
 
 # 업로드한 사진이 저장되는 위치
