@@ -3,6 +3,8 @@ import { getCollection } from 'astro:content';
 import { useT, usePath, type Lang } from '../i18n/utils';
 import { PUB_CATEGORIES, listHref, detailBase, type PubKey } from '../i18n/pubs';
 
+const fundKey = (f?: string) => (f === 'gov' ? 'projects.gov' : f === 'org' ? 'projects.org' : '');
+
 interface Props {
   lang: Lang;
   category: PubKey;
@@ -70,6 +72,11 @@ const itemBase = detailBase(category, path);
                 .map((p) => (
                   <li class="pub-item">
                     <a href={`${itemBase}${p.id}/`} class="pub-link">
+                      {p.data.fund && (
+                        <span class:list={['tag', `tag--fund-${p.data.fund}`]}>
+                          {t(fundKey(p.data.fund))}
+                        </span>
+                      )}
                       <h3 class="pub-title">{p.data.title}</h3>
                       <p class="pub-authors">{p.data.authors}</p>
                       <p class="pub-venue">{p.data.venue}</p>
@@ -148,6 +155,14 @@ const itemBase = detailBase(category, path);
   }
   .pub-link:hover .pub-title {
     color: var(--accent);
+  }
+  .pub-link .tag {
+    margin-bottom: 8px;
+  }
+  .tag--fund-gov {
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-color: var(--accent-border);
   }
   .pub-title {
     font-size: 1rem;

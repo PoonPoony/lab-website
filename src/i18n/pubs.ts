@@ -14,7 +14,11 @@ export const PROJECT_KEY = 'project';
 export type PubKey = (typeof PUB_CATEGORIES)[number]['key'] | typeof PROJECT_KEY;
 
 // 메인 화면에 탭으로 보여줄 카테고리
-export const HOME_PUB_KEYS = ['intl-journal', 'intl-conf', 'domestic-conf'] as const;
+export const HOME_PUB_KEYS = ['intl-journal', 'intl-conf', 'domestic-conf', PROJECT_KEY] as const;
+
+/** 그 카테고리의 이름표 키 */
+export const labelKeyOf = (key: string) =>
+  key === PROJECT_KEY ? 'projects.title' : catByKey(key)!.labelKey;
 
 export const catByKey = (key: string) => PUB_CATEGORIES.find((c) => c.key === key);
 

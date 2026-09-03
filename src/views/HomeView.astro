@@ -1,6 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
-import { HOME_PUB_KEYS, catByKey } from '../i18n/pubs';
+import { HOME_PUB_KEYS, labelKeyOf, listHref, detailBase } from '../i18n/pubs';
 import {
   useT,
   usePath,
@@ -59,18 +59,18 @@ const pubBase = path('/publications');
 
 // 카테고리별 최신 4편
 const pubTabs = HOME_PUB_KEYS.map((key) => {
-  const cat = catByKey(key)!;
+  const itemBase = detailBase(key, path);
   return {
     key,
-    label: t(cat.labelKey),
-    href: key === 'intl-journal' ? pubBase : `${pubBase}${cat.slug}/`,
+    label: t(labelKeyOf(key)),
+    href: listHref(key, path),
     items: pubs
       .filter((p) => p.data.type === key)
       .sort((a, b) => b.data.year - a.data.year || a.data.title.localeCompare(b.data.title))
       .slice(0, 4)
       .map((p) => ({
         id: p.id,
-        detail: `${pubBase}${cat.slug}/${p.id}/`,
+        detail: `${itemBase}${p.id}/`,
         year: p.data.year,
         title: p.data.title,
         authors: p.data.authors,
@@ -184,7 +184,7 @@ const catLabel = (c: string) =>
     <div class="wrap">
       <div class="section-head">
         <div>
-          <p class="eyebrow">Publications</p>
+          <p class="eyebrow">Highlights</p>
           <h2 class="h-section">{t('home.pubs.title')}</h2>
         </div>
       </div>

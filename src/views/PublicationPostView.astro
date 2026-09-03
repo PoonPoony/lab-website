@@ -29,6 +29,11 @@ const doiUrl = entry.data.doi
       <a href={backHref} class="back">← {t('pubs.back')}</a>
       <div class="pub-meta-top">
         <span class="tag tag--accent">{catLabel}</span>
+        {entry.data.fund && (
+          <span class="tag">
+            {t(entry.data.fund === 'gov' ? 'projects.gov' : 'projects.org')}
+          </span>
+        )}
         <span>{entry.data.year}</span>
       </div>
       <h1 class="pub-h1">{entry.data.title}</h1>
