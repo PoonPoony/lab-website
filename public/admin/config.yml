@@ -7,7 +7,7 @@
 
 backend:
   name: github
-  repo: yhjung105/lab-website # ← 여기를 수정하세요
+  repo: PoonPoony/lab-website # ← 여기를 수정하세요
   branch: main
   # 학생들도 로그인해서 글을 쓰게 하려면 아래 두 줄의 주석을 풀고
   # Cloudflare Workers에 인증 도우미를 배포한 주소를 넣으세요. (가이드 5단계 참고)
