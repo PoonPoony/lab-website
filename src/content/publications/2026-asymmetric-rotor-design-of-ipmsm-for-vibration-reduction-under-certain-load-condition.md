@@ -1,7 +1,7 @@
 ---
 title: Asymmetric Rotor Design of IPMSM for Vibration Reduction Under Certain Load Condition
 authors: Y.-H. Jung, M.-R. Park, and M.-S. Lim
-venue: IEEE TRANSACTIONS ON ENERGY CONVERSION, vol. 35, no. 2, pp. 928-937
+venue: IEEE TRANSACTIONS ON ENERGY CONVERSION, VOL. 35, NO. 2, pp. 928-937
 date: 2020-06
 start: ''
 end: ''
