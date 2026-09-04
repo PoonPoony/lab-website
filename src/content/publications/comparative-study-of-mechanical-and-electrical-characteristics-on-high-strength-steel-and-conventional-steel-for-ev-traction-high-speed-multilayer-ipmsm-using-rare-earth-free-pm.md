@@ -5,7 +5,7 @@ venue: 2023 IEEE International Magnetic Conference - Short Papers (INTERMAG Shor
 date: 2023-05
 start: ''
 end: ''
-type: intl-journal
+type: intl-conf
 fund: ''
 doi: 10.1109/INTERMAGShortPapers58606.2023.10228340
 link: ''
