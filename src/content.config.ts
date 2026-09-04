@@ -47,7 +47,7 @@ const publications = defineCollection({
     venue: z.string(),
     year: z.number(),
     type: z.enum(['intl-journal', 'intl-conf', 'domestic-conf', 'patent', 'project']),
-    fund: z.enum(['gov', 'org']).optional(),
+    fund: z.union([z.enum(['gov', 'org']), z.literal('')]).optional(),
     doi: z.string().default(''),
     link: z.string().default(''),
   }),
