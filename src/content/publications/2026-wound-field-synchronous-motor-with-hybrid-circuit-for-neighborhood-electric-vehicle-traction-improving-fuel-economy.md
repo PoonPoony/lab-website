@@ -1,7 +1,7 @@
 ---
 title: Wound field synchronous motor with hybrid circuit for neighborhood electric vehicle traction improving fuel economy
 authors: K.-S. Cha, D.-M. Kim, Y.-H. Jung, and M.-S. Lim
-venue: Applied Energy, no. 263, Art. no. 114618
+venue: Applied Energy, vol. 263, Art. no. 114618
 year: 2020
 type: intl-journal
 fund: ''
