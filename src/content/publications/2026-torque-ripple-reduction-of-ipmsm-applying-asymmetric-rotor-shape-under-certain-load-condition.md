@@ -1,7 +1,7 @@
 ---
 title: Torque Ripple Reduction of IPMSM Applying Asymmetric Rotor Shape Under Certain Load Condition
 authors: Y.-H. Jung, M.-S. Lim, M.-H. Yoon, J.-S. Jeong, and J.-P. Hong
-venue: IEEE TRANSACTIONS ON ENERGY CONVERSION, VOL. 33, NO. 1, pp. 333-340
+venue: IEEE TRANSACTIONS ON ENERGY CONVERSION, vol. 33, no. 1, pp. 333-340
 year: 2018
 type: intl-journal
 fund: ''
