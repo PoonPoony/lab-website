@@ -1,7 +1,7 @@
 ---
 title: Design of High-Speed Multilayer IPMSM Using Ferrite PM for EV Traction Considering Mechanical and Electrical Characteristics
 authors: Y.-H. Jung, M.-R. Park, K.-O Kim, J.-W. Chin, J.-P. Hong, and M.-S. Lim
-venue: IEEE TRANSACTIONS ON INDUSTRY APPLICATIONS, vol. 57, no. 1, pp. 327-339
+venue: IEEE TRANSACTIONS ON INDUSTRY APPLICATIONS, VOL. 57, NO. 1, pp. 327-339
 date: 2021-01
 start: ''
 end: ''
