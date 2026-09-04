@@ -45,8 +45,13 @@ const publications = defineCollection({
     title: z.string(),
     authors: z.string(),
     venue: z.string(),
-    year: z.number(),
+    // 연월은 'YYYY-MM' 형식으로 적습니다. (예: 2026-03)
+    date: z.string().optional(), // 논문·특허 — 게재 연월
+    start: z.string().optional(), // 과제 — 시작 연월
+    end: z.string().optional(), // 과제 — 종료 연월
+    year: z.number().optional(), // 예전에 연도만 넣은 항목 호환용
     type: z.enum(['intl-journal', 'intl-conf', 'domestic-conf', 'patent', 'project']),
+    // 관리자 페이지에서 비워두면 빈 문자열로 저장되므로 함께 허용합니다.
     fund: z.union([z.enum(['gov', 'org']), z.literal('')]).optional(),
     doi: z.string().default(''),
     link: z.string().default(''),

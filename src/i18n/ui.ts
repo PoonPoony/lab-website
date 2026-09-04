@@ -93,7 +93,8 @@ export const ui = {
     'pubs.back': '목록으로',
     'pubs.authors': '저자',
     'pubs.venue': '게재처',
-    'pubs.year': '연도',
+    'pubs.year': '게재 연월',
+    'projects.period': '수행 기간',
     'pubs.link': '원문 보기',
 
     'news.title': '공지사항',
@@ -173,7 +174,8 @@ export const ui = {
     'pubs.back': 'Back to list',
     'pubs.authors': 'Authors',
     'pubs.venue': 'Published in',
-    'pubs.year': 'Year',
+    'pubs.year': 'Published',
+    'projects.period': 'Period',
     'pubs.link': 'View source',
 
     'news.title': 'News',

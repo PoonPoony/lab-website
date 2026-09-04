@@ -34,3 +34,44 @@ export function detailBase(key: string, path: (p: string) => string) {
   if (key === PROJECT_KEY) return path('/projects');
   return `${path('/publications')}${catByKey(key)!.slug}/`;
 }
+
+/* ---------- 연월 처리 ---------- */
+
+type Ym = { y: number; m: number };
+
+const parseYm = (v?: string): Ym | null => {
+  const m = /^(\d{4})-(\d{1,2})/.exec((v ?? '').trim());
+  return m ? { y: Number(m[1]), m: Number(m[2]) } : null;
+};
+
+type PubData = { date?: string; start?: string; end?: string; year?: number };
+
+/** 목록을 묶고 정렬할 때 쓰는 연도 */
+export const pubYear = (d: PubData): number =>
+  parseYm(d.date)?.y ?? parseYm(d.start)?.y ?? d.year ?? 0;
+
+/** 같은 해 안에서 정렬할 때 쓰는 월 */
+export const pubMonth = (d: PubData): number =>
+  parseYm(d.date)?.m ?? parseYm(d.start)?.m ?? 0;
+
+/** 화면에 보여줄 연월 문구 */
+export function pubDateLabel(d: PubData, lang: 'ko' | 'en'): string {
+  const one = (v?: string) => {
+    const t = parseYm(v);
+    if (!t) return '';
+    if (lang === 'ko') return `${t.y}년 ${t.m}월`;
+    const name = new Date(Date.UTC(t.y, t.m - 1, 1)).toLocaleString('en-US', {
+      month: 'short',
+      timeZone: 'UTC',
+    });
+    return `${name} ${t.y}`;
+  };
+
+  if (d.start || d.end) {
+    const a = one(d.start);
+    const b = one(d.end);
+    if (a && b) return `${a} – ${b}`;
+    return a || b;
+  }
+  return one(d.date);
+}

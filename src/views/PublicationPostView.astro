@@ -1,7 +1,7 @@
 ---
 import { render, type CollectionEntry } from 'astro:content';
 import { useT, usePath, type Lang } from '../i18n/utils';
-import { PUB_CATEGORIES, PROJECT_KEY, listHref } from '../i18n/pubs';
+import { PUB_CATEGORIES, PROJECT_KEY, listHref, pubYear, pubDateLabel } from '../i18n/pubs';
 
 interface Props {
   lang: Lang;
@@ -17,6 +17,7 @@ const cat = PUB_CATEGORIES.find((c) => c.key === entry.data.type);
 const catLabel = isProject ? t('projects.title') : t(cat!.labelKey);
 const backHref = listHref(entry.data.type, path);
 
+const whenLabel = pubDateLabel(entry.data, lang);
 const hasBody = (entry.body ?? '').trim().length > 0;
 const doiUrl = entry.data.doi
   ? `https://doi.org/${entry.data.doi.replace(/^https?:\/\/doi\.org\//, '')}`
@@ -34,7 +35,7 @@ const doiUrl = entry.data.doi
             {t(entry.data.fund === 'gov' ? 'projects.gov' : 'projects.org')}
           </span>
         )}
-        <span>{entry.data.year}</span>
+        <span>{whenLabel || pubYear(entry.data) || ''}</span>
       </div>
       <h1 class="pub-h1">{entry.data.title}</h1>
     </div>
@@ -51,6 +52,12 @@ const doiUrl = entry.data.doi
           <dt>{t('pubs.venue')}</dt>
           <dd>{entry.data.venue}</dd>
         </div>
+        {whenLabel && (
+          <div>
+            <dt>{isProject ? t('projects.period') : t('pubs.year')}</dt>
+            <dd>{whenLabel}</dd>
+          </div>
+        )}
         {entry.data.doi && (
           <div>
             <dt>DOI</dt>

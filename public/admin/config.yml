@@ -7,7 +7,7 @@
 
 backend:
   name: github
-  repo: PoonPoony/lab-website # ← 여기를 수정하세요
+  repo: PoonPoony/lab-website
   branch: main
   # 학생들도 로그인해서 글을 쓰게 하려면 아래 두 줄의 주석을 풀고
   # Cloudflare Workers에 인증 도우미를 배포한 주소를 넣으세요. (가이드 5단계 참고)
@@ -15,8 +15,8 @@ backend:
   # auth_endpoint: auth
 
 # 글을 저장하면 GitHub에 남는 커밋 메시지
-site_url: https://lab-website.yhjung105.workers.dev # ← 배포 후 실제 주소로 수정
-display_url: https://lab-website.yhjung105.workers.dev # ← 배포 후 실제 주소로 수정
+site_url: https://lab-website.yhjung105.workers.dev
+display_url: https://lab-website.yhjung105.workers.dev
 publish_mode: simple
 
 # 업로드한 사진이 저장되는 위치
@@ -146,20 +146,37 @@ collections:
       - { name: body, label: 상세 설명, widget: markdown, i18n: true }
 
   # ---------------------------------------------------------
-  # 논문 · 실적 (영문 서지정보라 언어 구분 없음)
+  # 논문 · 과제 (영문 서지정보라 언어 구분 없음)
   # ---------------------------------------------------------
   - name: publications
     label: 논문 · 실적
-    label_singular: 논문
+    label_singular: 항목
     folder: src/content/publications
     create: true
-    slug: '{{year}}-{{slug}}'
-    sortable_fields: [year, title]
+    slug: '{{slug}}'
+    sortable_fields: [date, start, title]
     fields:
       - { name: title, label: 제목, widget: string }
       - { name: authors, label: 저자, widget: string, hint: '예) M. Kim, S. Lee, and Y.-H. Jung' }
       - { name: venue, label: 게재처 / 권·호·페이지, widget: string, hint: '예) IEEE Transactions on Industry Applications, vol. 62, no. 3, pp. 2140–2150' }
-      - { name: year, label: 연도, widget: number, value_type: int, default: 2026 }
+      - name: date
+        label: 게재 연월 (논문 · 특허)
+        widget: string
+        required: false
+        hint: 'YYYY-MM 형식. 예) 2026-03  ← 과제는 비우고 아래 시작/종료를 쓰세요'
+        pattern: ['^\d{4}-\d{2}$', 'YYYY-MM 형식으로 적어주세요. 예) 2026-03']
+      - name: start
+        label: 시작 연월 (과제)
+        widget: string
+        required: false
+        hint: '예) 2023-06'
+        pattern: ['^\d{4}-\d{2}$', 'YYYY-MM 형식으로 적어주세요. 예) 2023-06']
+      - name: end
+        label: 종료 연월 (과제)
+        widget: string
+        required: false
+        hint: '예) 2026-05'
+        pattern: ['^\d{4}-\d{2}$', 'YYYY-MM 형식으로 적어주세요. 예) 2026-05']
       - name: type
         label: 종류
         widget: select

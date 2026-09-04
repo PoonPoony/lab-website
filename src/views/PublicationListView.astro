@@ -1,7 +1,15 @@
 ---
 import { getCollection } from 'astro:content';
 import { useT, usePath, type Lang } from '../i18n/utils';
-import { PUB_CATEGORIES, listHref, detailBase, type PubKey } from '../i18n/pubs';
+import {
+  PUB_CATEGORIES,
+  listHref,
+  detailBase,
+  pubYear,
+  pubMonth,
+  pubDateLabel,
+  type PubKey,
+} from '../i18n/pubs';
 
 const fundKey = (f?: string) => (f === 'gov' ? 'projects.gov' : f === 'org' ? 'projects.org' : '');
 
@@ -28,9 +36,14 @@ const path = usePath(lang);
 const all = await getCollection('publications');
 const pubs = all
   .filter((p) => p.data.type === category)
-  .sort((a, b) => b.data.year - a.data.year || a.data.title.localeCompare(b.data.title));
+  .sort(
+    (a, b) =>
+      pubYear(b.data) - pubYear(a.data) ||
+      pubMonth(b.data) - pubMonth(a.data) ||
+      a.data.title.localeCompare(b.data.title),
+  );
 
-const years = [...new Set(pubs.map((p) => p.data.year))].sort((a, b) => b - a);
+const years = [...new Set(pubs.map((p) => pubYear(p.data)))].sort((a, b) => b - a);
 const itemBase = detailBase(category, path);
 ---
 
@@ -68,7 +81,7 @@ const itemBase = detailBase(category, path);
             <h2 class="year-title">{year}</h2>
             <ol class="pub-list">
               {pubs
-                .filter((p) => p.data.year === year)
+                .filter((p) => pubYear(p.data) === year)
                 .map((p) => (
                   <li class="pub-item">
                     <a href={`${itemBase}${p.id}/`} class="pub-link">
@@ -80,6 +93,9 @@ const itemBase = detailBase(category, path);
                       <h3 class="pub-title">{p.data.title}</h3>
                       <p class="pub-authors">{p.data.authors}</p>
                       <p class="pub-venue">{p.data.venue}</p>
+                      {pubDateLabel(p.data, lang) && (
+                        <p class="pub-when">{pubDateLabel(p.data, lang)}</p>
+                      )}
                     </a>
                   </li>
                 ))}
@@ -180,6 +196,12 @@ const itemBase = detailBase(category, path);
     font-size: 0.85rem;
     color: var(--text-faint);
     margin: 0;
+  }
+  .pub-when {
+    font-size: 0.82rem;
+    color: var(--text-faint);
+    margin: 4px 0 0;
+    font-variant-numeric: tabular-nums;
   }
 
   .empty {

@@ -1,6 +1,13 @@
 ---
 import { getCollection } from 'astro:content';
-import { HOME_PUB_KEYS, labelKeyOf, listHref, detailBase } from '../i18n/pubs';
+import {
+  HOME_PUB_KEYS,
+  labelKeyOf,
+  listHref,
+  detailBase,
+  pubYear,
+  pubMonth,
+} from '../i18n/pubs';
 import {
   useT,
   usePath,
@@ -66,12 +73,17 @@ const pubTabs = HOME_PUB_KEYS.map((key) => {
     href: listHref(key, path),
     items: pubs
       .filter((p) => p.data.type === key)
-      .sort((a, b) => b.data.year - a.data.year || a.data.title.localeCompare(b.data.title))
+      .sort(
+        (a, b) =>
+          pubYear(b.data) - pubYear(a.data) ||
+          pubMonth(b.data) - pubMonth(a.data) ||
+          a.data.title.localeCompare(b.data.title),
+      )
       .slice(0, 4)
       .map((p) => ({
         id: p.id,
         detail: `${itemBase}${p.id}/`,
-        year: p.data.year,
+        year: pubYear(p.data),
         title: p.data.title,
         authors: p.data.authors,
         venue: p.data.venue,
