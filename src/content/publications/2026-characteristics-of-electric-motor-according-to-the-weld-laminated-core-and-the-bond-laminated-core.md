@@ -1,7 +1,7 @@
 ---
 title: Characteristics of Electric Motor according to the Weld-laminated Core and the Bond-laminated Core
 authors: D.-Y. Kim, M.-R. Park, Y.-H. Jung, H.-J. Park, J.-P. Hong, and M.-S. Lim
-venue: Journal of Magnetics, vol. 24, no. 4, pp. 641-649
+venue: Journal of Magnetics, VOL. 24, NO. 4, pp. 641-649
 date: 2019-12
 start: ''
 end: ''
