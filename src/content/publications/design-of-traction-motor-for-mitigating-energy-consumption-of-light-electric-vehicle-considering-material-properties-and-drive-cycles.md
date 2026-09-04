@@ -1,7 +1,7 @@
 ---
 title: DESIGN OF TRACTION MOTOR FOR MITIGATING ENERGY CONSUMPTION OF LIGHT ELECTRIC VEHICLE CONSIDERING MATERIAL PROPERTIES AND DRIVE CYCLES
 authors: D.-M. Kim, Y.-H. Jung, K.-S. Cha, and M.-S. Lim
-venue: International Journal of Automotive Technology, vol. 21, no. 6, pp. 1391-1399
+venue: International Journal of Automotive Technology, VOL. 21, NO. 6, pp. 1391-1399
 date: 2020-11
 start: ''
 end: ''
