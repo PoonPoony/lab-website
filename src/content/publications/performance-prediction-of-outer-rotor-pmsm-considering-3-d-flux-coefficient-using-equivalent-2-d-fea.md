@@ -5,7 +5,7 @@ venue: Machines, VOL. 13, ART. NO. 692
 date: 2025-08
 start: ''
 end: ''
-type: intl-journal
+type: intl-conf
 fund: ''
 doi: 10.3390/machines13080692
 link: ''
