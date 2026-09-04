@@ -44,6 +44,12 @@ const pubs = all
   );
 
 const years = [...new Set(pubs.map((p) => pubYear(p.data)))].sort((a, b) => b - a);
+
+// 게재처 뒤에 연월을 이어 붙입니다. (예: IEEE Trans. …, pp. 2140–2150, 2026년 3월)
+const venueLine = (d: { venue: string }) => {
+  const when = pubDateLabel(d as any, lang);
+  return when ? `${d.venue}, ${when}` : d.venue;
+};
 const itemBase = detailBase(category, path);
 ---
 
@@ -92,10 +98,7 @@ const itemBase = detailBase(category, path);
                       )}
                       <h3 class="pub-title">{p.data.title}</h3>
                       <p class="pub-authors">{p.data.authors}</p>
-                      <p class="pub-venue">{p.data.venue}</p>
-                      {pubDateLabel(p.data, lang) && (
-                        <p class="pub-when">{pubDateLabel(p.data, lang)}</p>
-                      )}
+                      <p class="pub-venue">{venueLine(p.data)}</p>
                     </a>
                   </li>
                 ))}
@@ -196,12 +199,6 @@ const itemBase = detailBase(category, path);
     font-size: 0.85rem;
     color: var(--text-faint);
     margin: 0;
-  }
-  .pub-when {
-    font-size: 0.82rem;
-    color: var(--text-faint);
-    margin: 4px 0 0;
-    font-variant-numeric: tabular-nums;
   }
 
   .empty {

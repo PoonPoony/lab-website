@@ -64,7 +64,7 @@ export function pubDateLabel(d: PubData, lang: 'ko' | 'en'): string {
       month: 'short',
       timeZone: 'UTC',
     });
-    return `${name} ${t.y}`;
+    return `${name}. ${t.y}`;
   };
 
   if (d.start || d.end) {
