@@ -153,7 +153,8 @@ collections:
     label_singular: 항목
     folder: src/content/publications
     create: true
-    slug: '{{slug}}'
+    # 같은 제목이 학술대회·학술지로 각각 올라올 수 있어 종류를 앞에 붙입니다.
+    slug: '{{type}}-{{slug}}'
     sortable_fields: [date, start, title]
     fields:
       - { name: title, label: 제목, widget: string }
