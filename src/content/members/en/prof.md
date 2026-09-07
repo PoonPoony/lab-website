@@ -6,6 +6,9 @@ topic: Electric machine design, FEA-based loss analysis, thermal modeling, optim
 email: yhjung@yu.ac.kr
 photo: ''
 order: 1
+education: []
+career: []
+activities: []
 links:
   - label: Google Scholar
     url: https://scholar.google.com/
