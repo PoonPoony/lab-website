@@ -69,6 +69,9 @@ export const ui = {
 
     'members.title': '구성원',
     'members.desc': '함께 연구하는 사람들입니다.',
+    'members.tab.faculty': '교수',
+    'members.tab.students': '학생',
+    'members.tab.alumni': '졸업생',
     'members.professor': '지도교수',
     'members.postdoc': '박사후연구원',
     'members.phd': '박사과정',
@@ -150,6 +153,9 @@ export const ui = {
 
     'members.title': 'Members',
     'members.desc': 'The people behind our research.',
+    'members.tab.faculty': 'Faculty',
+    'members.tab.students': 'Students',
+    'members.tab.alumni': 'Alumni',
     'members.professor': 'Principal Investigator',
     'members.postdoc': 'Postdoctoral Researcher',
     'members.phd': 'Ph.D. Students',

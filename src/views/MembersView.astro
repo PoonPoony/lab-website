@@ -10,7 +10,7 @@ const t = useT(lang);
 
 const all = filterByLang(await getCollection('members'), lang);
 
-const groups = [
+const allGroups = [
   { role: 'professor', label: t('members.professor') },
   { role: 'postdoc', label: t('members.postdoc') },
   { role: 'phd', label: t('members.phd') },
@@ -26,6 +26,15 @@ const groups = [
   }))
   .filter((g) => g.people.length > 0);
 
+// 교수 / 학생 / 졸업생 세 갈래로 묶습니다.
+const tabs = [
+  { key: 'faculty', label: t('members.tab.faculty'), roles: ['professor'] },
+  { key: 'students', label: t('members.tab.students'), roles: ['postdoc', 'phd', 'ms', 'undergrad'] },
+  { key: 'alumni', label: t('members.tab.alumni'), roles: ['alumni'] },
+]
+  .map((tab) => ({ ...tab, groups: allGroups.filter((g) => tab.roles.includes(g.role)) }))
+  .filter((tab) => tab.groups.length > 0);
+
 const initials = (name: string) =>
   /[가-힣]/.test(name) ? name.slice(-2) : name.split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase();
 ---
@@ -40,64 +49,149 @@ const initials = (name: string) =>
 
 <section class="section">
   <div class="wrap">
-    {groups.map((group) => (
-      <div class="group">
-        <h2 class="group-title">
-          {group.label}
-          <span class="group-count">{group.people.length}</span>
-        </h2>
+    {tabs.length > 1 && (
+      <div class="mtabs" role="tablist" aria-label={t('members.title')}>
+        {tabs.map((tab, i) => (
+          <button
+            type="button"
+            role="tab"
+            id={`mtab-${tab.key}`}
+            aria-controls={`mpanel-${tab.key}`}
+            aria-selected={i === 0 ? 'true' : 'false'}
+            class:list={['mtab', { 'is-active': i === 0 }]}
+          >
+            {tab.label}
+            <span class="mtab-count">
+              {tab.groups.reduce((n, g) => n + g.people.length, 0)}
+            </span>
+          </button>
+        ))}
+      </div>
+    )}
 
-        {group.role === 'alumni' ? (
-          <ul class="alumni-list">
-            {group.people.map((m) => (
-              <li class="alumni-item">
-                <strong>{m.data.name}</strong>
-                {m.data.position && <span> · {m.data.position}</span>}
-                {m.data.topic && <span class="alumni-topic">{m.data.topic}</span>}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <div class:list={['people', { 'people--lead': group.role === 'professor' }]}>
-            {group.people.map((m) => (
-              <article class:list={['card', 'person', { 'person--lead': group.role === 'professor' }]}>
-                <div class="avatar">
-                  {m.data.photo ? (
-                    <img src={m.data.photo} alt={m.data.name} loading="lazy" />
-                  ) : (
-                    <span aria-hidden="true">{initials(m.data.name)}</span>
-                  )}
-                </div>
-                <div class="person-body">
-                  <h3 class="person-name">{m.data.name}</h3>
-                  {m.data.position && <p class="person-position">{m.data.position}</p>}
-                  {m.data.topic && (
-                    <p class="person-topic">
-                      <span class="person-topic-label">{t('members.topic')}</span>
-                      {m.data.topic}
-                    </p>
-                  )}
-                  <div class="person-links">
-                    {m.data.email && (
-                      <a href={`mailto:${m.data.email}`} class="person-link">{m.data.email}</a>
-                    )}
-                    {m.data.links.map((l) => (
-                      <a href={l.url} class="person-link" target="_blank" rel="noopener noreferrer">
-                        {l.label} ↗
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              </article>
-            ))}
+    {tabs.map((tab, i) => (
+      <div
+        id={`mpanel-${tab.key}`}
+        role="tabpanel"
+        aria-labelledby={`mtab-${tab.key}`}
+        hidden={i !== 0}
+      >
+        {tab.groups.map((group) => (
+          <div class="group">
+            <h2 class="group-title">
+              {group.label}
+              <span class="group-count">{group.people.length}</span>
+            </h2>
+
+            {group.role === 'alumni' ? (
+              <ul class="alumni-list">
+                {group.people.map((m) => (
+                  <li class="alumni-item">
+                    <strong>{m.data.name}</strong>
+                    {m.data.position && <span> · {m.data.position}</span>}
+                    {m.data.topic && <span class="alumni-topic">{m.data.topic}</span>}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div class:list={['people', { 'people--lead': group.role === 'professor' }]}>
+                {group.people.map((m) => (
+                  <article class:list={['card', 'person', { 'person--lead': group.role === 'professor' }]}>
+                    <div class="avatar">
+                      {m.data.photo ? (
+                        <img src={m.data.photo} alt={m.data.name} loading="lazy" />
+                      ) : (
+                        <span aria-hidden="true">{initials(m.data.name)}</span>
+                      )}
+                    </div>
+                    <div class="person-body">
+                      <h3 class="person-name">{m.data.name}</h3>
+                      {m.data.position && <p class="person-pos">{m.data.position}</p>}
+                      {m.data.topic && (
+                        <p class="person-topic">
+                          <span class="person-topic-label">{t('members.topic')}</span>
+                          {m.data.topic}
+                        </p>
+                      )}
+                      {m.data.email && (
+                        <a href={`mailto:${m.data.email}`} class="person-mail">{m.data.email}</a>
+                      )}
+                      {m.data.links.length > 0 && (
+                        <ul class="person-links">
+                          {m.data.links.map((l) => (
+                            <li>
+                              <a href={l.url} target="_blank" rel="noopener noreferrer">{l.label}</a>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  </article>
+                ))}
+              </div>
+            )}
           </div>
-        )}
+        ))}
       </div>
     ))}
   </div>
 </section>
 
+<script>
+  const mtabs = document.querySelectorAll('.mtab');
+  mtabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      mtabs.forEach((t) => {
+        const on = t === tab;
+        t.classList.toggle('is-active', on);
+        t.setAttribute('aria-selected', String(on));
+        const panel = document.getElementById(t.getAttribute('aria-controls') || '');
+        if (panel) panel.hidden = !on;
+      });
+    });
+  });
+</script>
+
 <style>
+  .mtabs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding-bottom: 6px;
+    margin-bottom: 34px;
+    border-bottom: 1px solid var(--border);
+  }
+  .mtab {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 16px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    border-radius: 999px;
+    font: inherit;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s ease;
+  }
+  .mtab:hover {
+    border-color: var(--accent-border);
+    color: var(--text);
+  }
+  .mtab.is-active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+  .mtab-count {
+    font-size: 0.75rem;
+    opacity: 0.7;
+    font-variant-numeric: tabular-nums;
+  }
+
   .group + .group {
     margin-top: clamp(40px, 6vw, 60px);
   }
