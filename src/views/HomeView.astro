@@ -7,6 +7,7 @@ import {
   detailBase,
   pubYear,
   pubMonth,
+  pubDateLabel,
 } from '../i18n/pubs';
 import {
   useT,
@@ -86,7 +87,9 @@ const pubTabs = HOME_PUB_KEYS.map((key) => {
         year: pubYear(p.data),
         title: p.data.title,
         authors: p.data.authors,
-        venue: p.data.venue,
+        venue: pubDateLabel(p.data, lang)
+          ? `${p.data.venue}, ${pubDateLabel(p.data, lang)}`
+          : p.data.venue,
       })),
   };
 }).filter((g) => g.items.length > 0);
@@ -228,7 +231,7 @@ const catLabel = (c: string) =>
             {g.items.map((p) => (
               <li class="pub-item">
                 <span class="pub-year">{p.year}</span>
-                <a href={p.detail} class="pub-body">
+                <a href={p.detail} class:list={['pub-body', { 'pub-body--plain': g.key === 'project' }]}>
                   <h3 class="pub-title">{p.title}</h3>
                   <p class="pub-authors">{p.authors}</p>
                   <p class="pub-venue">{p.venue}</p>
@@ -666,6 +669,9 @@ const catLabel = (c: string) =>
     display: inline-block;
     margin-top: 18px;
     font-size: 0.85rem;
+  }
+  .pub-body--plain .pub-venue {
+    font-style: normal;
   }
   .pub-body:hover .pub-title {
     color: var(--accent);
