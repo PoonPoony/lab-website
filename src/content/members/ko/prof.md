@@ -18,7 +18,7 @@ career:
     text: Senior researcher in Hyundai Motor Company
 activities:
   - period: 2024-2026
-    text: 미래자동차공학과 자작차동아리 YUSAE 지도교수
+    text: 영남대학교 미래자동차공학과 자작차동아리 YUSAE 지도교수
   - period: '2024'
     text: 서울시 공무원 임용시험 출제위원
   - period: '2026'
