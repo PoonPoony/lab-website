@@ -5,7 +5,7 @@ venue: 2024 IEEE 21st Biennial Conference on Electromagnetic Field Computation (
 date: 2024-06
 start: ''
 end: ''
-type: intl-journal
+type: intl-conf
 fund: ''
 doi: 10.1109/CEFC61729.2024.10585809
 link: ''
