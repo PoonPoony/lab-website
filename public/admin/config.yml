@@ -112,6 +112,37 @@ collections:
       - { name: email, label: 이메일, widget: string, required: false, i18n: duplicate }
       - { name: photo, label: 사진, widget: image, required: false, i18n: duplicate }
       - { name: order, label: 표시 순서 (작을수록 먼저), widget: number, default: 1, value_type: int, i18n: duplicate }
+      - name: education
+        label: 학력 (지도교수용)
+        widget: list
+        required: false
+        i18n: true
+        label_singular: 학력
+        summary: '{{fields.period}} {{fields.text}}'
+        fields:
+          - { name: period, label: 연도, widget: string, required: false, hint: '예) 2015' }
+          - { name: text, label: 내용, widget: string, hint: '예) 서울대학교 전기공학 박사' }
+      - name: career
+        label: 경력 (지도교수용)
+        widget: list
+        required: false
+        i18n: true
+        label_singular: 경력
+        summary: '{{fields.period}} {{fields.text}}'
+        fields:
+          - { name: period, label: 기간, widget: string, required: false, hint: '예) 2018–2022' }
+          - { name: text, label: 내용, widget: string, hint: '예) 현대자동차 책임연구원' }
+      - name: activities
+        label: 활동 (지도교수용)
+        widget: list
+        required: false
+        i18n: true
+        label_singular: 활동
+        summary: '{{fields.period}} {{fields.text}}'
+        hint: '위원 · 지도 등 맡으신 역할. 예) 서울시 공무원 시험출제위원'
+        fields:
+          - { name: period, label: 기간, widget: string, required: false, hint: '예) 2024' }
+          - { name: text, label: 내용, widget: string }
       - name: links
         label: 외부 링크
         widget: list

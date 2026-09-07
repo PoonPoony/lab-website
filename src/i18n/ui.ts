@@ -79,6 +79,9 @@ export const ui = {
     'members.undergrad': '학부연구생',
     'members.alumni': '졸업생',
     'members.topic': '연구 주제',
+    'members.education': '학력',
+    'members.career': '경력',
+    'members.activities': '활동',
 
     'pubs.title': '논문',
     'pubs.desc': '연구실에서 발표한 논문과 등록 특허입니다.',
@@ -163,6 +166,9 @@ export const ui = {
     'members.undergrad': 'Undergraduate Researchers',
     'members.alumni': 'Alumni',
     'members.topic': 'Research topic',
+    'members.education': 'Education',
+    'members.career': 'Experience',
+    'members.activities': 'Professional Activities',
 
     'pubs.title': 'Publications',
     'pubs.desc': 'Journal papers, conference papers and registered patents.',

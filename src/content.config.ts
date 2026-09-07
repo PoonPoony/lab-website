@@ -32,6 +32,16 @@ const members = defineCollection({
     email: z.string().default(''),
     photo: z.string().optional(),
     order: z.number().default(0),
+    // 교수 상세 — 필요한 사람만 채웁니다.
+    education: z
+      .array(z.object({ period: z.string().default(''), text: z.string() }))
+      .default([]),
+    career: z
+      .array(z.object({ period: z.string().default(''), text: z.string() }))
+      .default([]),
+    activities: z
+      .array(z.object({ period: z.string().default(''), text: z.string() }))
+      .default([]),
     links: z
       .array(z.object({ label: z.string(), url: z.string() }))
       .default([]),
