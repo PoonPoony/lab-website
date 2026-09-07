@@ -8,7 +8,7 @@ photo: ''
 order: 1
 education:
   - period: 2013/03-2020/08
-    text: Ph.D. in Automotive Engineering, Hanyang University, Korea
+    text: M.S./Ph.D. in Automotive Engineering, Hanyang University, Korea
   - period: 2009/03-2013/02
     text: B.S. in Mechanical Engineering, Hanyang University, Korea
 career:
