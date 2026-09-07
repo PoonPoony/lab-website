@@ -2,7 +2,7 @@
 type: domestic-conf
 title: 무부하 특성 개선을 위한 IPMSM 고정자 노치 형상 최적 설계
 authors: 김재훈, 김정훈, 이수홍, 박근호, 정영훈
-venue: 한국전기학회 하계학술대회 2025
+venue: 대한전기학회 하계학술대회 2025
 date: 2025-07
 doi: ''
 link: ''
