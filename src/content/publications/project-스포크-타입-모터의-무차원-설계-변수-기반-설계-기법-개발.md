@@ -5,6 +5,6 @@ authors: 책임
 venue: 한국전자기술연구원 연구용역
 start: 2026-06
 end: 2026-10
-fund: ''
+fund: org
 link: ''
 ---
