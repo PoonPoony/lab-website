@@ -113,6 +113,30 @@ const initials = (name: string) =>
                           {m.data.topic}
                         </p>
                       )}
+                      {group.role !== 'professor' &&
+                        m.data.education.length + m.data.career.length + m.data.activities.length >
+                          0 && (
+                          <div class="person-cv">
+                            {[
+                              { key: 'members.education', rows: m.data.education },
+                              { key: 'members.career', rows: m.data.career },
+                              { key: 'members.activities', rows: m.data.activities },
+                            ]
+                              .filter((sec) => sec.rows.length > 0)
+                              .map((sec) => (
+                                <div class="pcv-block">
+                                  <p class="pcv-label">{t(sec.key)}</p>
+                                  {sec.rows.map((r) => (
+                                    <p class="pcv-row">
+                                      {r.period && <span class="pcv-period">{r.period}</span>}
+                                      <span class="pcv-text">{r.text}</span>
+                                    </p>
+                                  ))}
+                                </div>
+                              ))}
+                          </div>
+                        )}
+
                       {m.data.email && (
                         <a href={`mailto:${m.data.email}`} class="person-mail">{m.data.email}</a>
                       )}
@@ -131,9 +155,10 @@ const initials = (name: string) =>
               </div>
             )}
 
-            {group.people.map((m) =>
+            {group.role === 'professor' && group.people.map((m) =>
               m.data.education.length + m.data.career.length + m.data.activities.length > 0 ? (
                 <div class="cv">
+                  {group.people.length > 1 && <h3 class="cv-who">{m.data.name}</h3>}
                   {[
                     { key: 'members.education', rows: m.data.education },
                     { key: 'members.career', rows: m.data.career },
@@ -183,6 +208,40 @@ const initials = (name: string) =>
     display: grid;
     gap: 26px;
     margin-top: 30px;
+  }
+  .person-cv {
+    margin: 4px 0 14px;
+    display: grid;
+    gap: 10px;
+  }
+  .pcv-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--text-faint);
+    margin: 0 0 3px;
+  }
+  .pcv-row {
+    display: grid;
+    grid-template-columns: minmax(150px, max-content) 1fr;
+    gap: 16px;
+    margin: 0 0 4px;
+    font-size: 0.88rem;
+    line-height: 1.5;
+  }
+  .pcv-period {
+    color: var(--text-faint);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .pcv-text {
+    color: var(--text-muted);
+  }
+
+  .cv-who {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 14px;
   }
   .cv-title {
     font-size: 0.78rem;
@@ -285,28 +344,24 @@ const initials = (name: string) =>
   /* 인원이 적어도 허전해 보이지 않도록 카드 최대 폭을 제한하고 왼쪽부터 채웁니다. */
   .people {
     display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-  }
-  .people > * {
-    flex: 1 1 216px;
-    max-width: 296px;
-  }
-  .people--lead > * {
-    flex: 1 1 340px;
-    max-width: 440px;
-  }
-
-  .person {
-    display: flex;
     flex-direction: column;
     gap: 14px;
-    padding: 22px;
   }
-  .person--lead {
+
+  /* 한 줄에 한 명 — 사진 왼쪽, 내용 오른쪽 */
+  .person {
+    display: flex;
     flex-direction: row;
     gap: 22px;
+    padding: 22px 24px;
+  }
+  .person--lead {
+    gap: 22px;
     padding: 26px;
+  }
+  .person-body {
+    flex: 1;
+    min-width: 0;
   }
 
   .avatar {
@@ -397,9 +452,15 @@ const initials = (name: string) =>
     color: var(--text-faint);
   }
 
-  @media (max-width: 480px) {
+  @media (max-width: 560px) {
+    .person,
     .person--lead {
       flex-direction: column;
+      gap: 14px;
+    }
+    .pcv-row {
+      grid-template-columns: 1fr;
+      gap: 1px;
     }
   }
 </style>
