@@ -5,7 +5,7 @@ authors: 참여
 venue: 한국산업기술기획평가원 자동차산업기술개발
 title_en: Development of Support Technologies for Global Commercialization of Heterogeneous ZCU and Adaptive Integrated Drive Modules
 authors_en: Co-Investigator
-venue_en: ''
+venue_en: KEIT Automotive Industry Technology Development Program
 start: 2026-04
 end: 2029-12
 fund: gov
