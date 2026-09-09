@@ -1,7 +1,14 @@
 ---
 import { render, type CollectionEntry } from 'astro:content';
 import { useT, usePath, type Lang } from '../i18n/utils';
-import { PUB_CATEGORIES, PROJECT_KEY, listHref, pubYear, pubDateLabel } from '../i18n/pubs';
+import {
+  PUB_CATEGORIES,
+  PROJECT_KEY,
+  listHref,
+  pubYear,
+  pubDateLabel,
+  pickText,
+} from '../i18n/pubs';
 
 interface Props {
   lang: Lang;
@@ -37,7 +44,7 @@ const doiUrl = entry.data.doi
         )}
         <span>{whenLabel || pubYear(entry.data) || ''}</span>
       </div>
-      <h1 class="pub-h1">{entry.data.title}</h1>
+      <h1 class="pub-h1">{pickText(entry.data, 'title', lang)}</h1>
     </div>
   </header>
 
@@ -46,11 +53,11 @@ const doiUrl = entry.data.doi
       <dl class="pub-facts">
         <div>
           <dt>{t('pubs.authors')}</dt>
-          <dd>{entry.data.authors}</dd>
+          <dd>{pickText(entry.data, 'authors', lang)}</dd>
         </div>
         <div>
           <dt>{t('pubs.venue')}</dt>
-          <dd>{entry.data.venue}</dd>
+          <dd>{pickText(entry.data, 'venue', lang)}</dd>
         </div>
         {whenLabel && (
           <div>

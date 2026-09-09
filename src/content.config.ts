@@ -55,6 +55,10 @@ const publications = defineCollection({
     title: z.string(),
     authors: z.string(),
     venue: z.string(),
+    // 국문으로 적은 항목의 영문 표기 — 비워두면 국문이 그대로 나옵니다.
+    title_en: z.string().default(''),
+    authors_en: z.string().default(''),
+    venue_en: z.string().default(''),
     // 연월은 'YYYY-MM' 형식으로 적습니다. (예: 2026-03)
     date: z.string().optional(), // 논문·특허 — 게재 연월
     start: z.string().optional(), // 과제 — 시작 연월

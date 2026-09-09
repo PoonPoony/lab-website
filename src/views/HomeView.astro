@@ -8,6 +8,7 @@ import {
   pubYear,
   pubMonth,
   pubDateLabel,
+  pickText,
 } from '../i18n/pubs';
 import {
   useT,
@@ -85,11 +86,11 @@ const pubTabs = HOME_PUB_KEYS.map((key) => {
         id: p.id,
         detail: `${itemBase}${p.id}/`,
         year: pubYear(p.data),
-        title: p.data.title,
-        authors: p.data.authors,
+        title: pickText(p.data, 'title', lang),
+        authors: pickText(p.data, 'authors', lang),
         venue: pubDateLabel(p.data, lang)
-          ? `${p.data.venue}, ${pubDateLabel(p.data, lang)}`
-          : p.data.venue,
+          ? `${pickText(p.data, 'venue', lang)}, ${pubDateLabel(p.data, lang)}`
+          : pickText(p.data, 'venue', lang),
       })),
   };
 }).filter((g) => g.items.length > 0);

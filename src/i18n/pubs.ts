@@ -84,3 +84,16 @@ export function projectStatus(d: PubData): 'ongoing' | 'done' {
   const cur = now.getFullYear() * 12 + (now.getMonth() + 1);
   return Number(m[1]) * 12 + Number(m[2]) >= cur ? 'ongoing' : 'done';
 }
+
+/** 영문 사이트에서는 *_en 값이 있으면 그걸 씁니다. (과제·특허처럼 국문으로 적은 항목용) */
+export function pickText(
+  d: Record<string, any>,
+  field: 'title' | 'authors' | 'venue',
+  lang: 'ko' | 'en',
+): string {
+  if (lang === 'en') {
+    const alt = (d[`${field}_en`] ?? '').trim();
+    if (alt) return alt;
+  }
+  return d[field];
+}

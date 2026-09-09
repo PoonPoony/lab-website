@@ -9,6 +9,7 @@ import {
   pubMonth,
   pubDateLabel,
   projectStatus,
+  pickText,
   type PubKey,
 } from '../i18n/pubs';
 
@@ -41,15 +42,16 @@ const pubs = all
     (a, b) =>
       pubYear(b.data) - pubYear(a.data) ||
       pubMonth(b.data) - pubMonth(a.data) ||
-      a.data.title.localeCompare(b.data.title),
+      pickText(a.data, 'title', lang).localeCompare(pickText(b.data, 'title', lang)),
   );
 
 const years = [...new Set(pubs.map((p) => pubYear(p.data)))].sort((a, b) => b - a);
 
 // 게재처 뒤에 연월을 이어 붙입니다. (예: IEEE Trans. …, pp. 2140–2150, 2026년 3월)
-const venueLine = (d: { venue: string }) => {
+const venueLine = (d: Record<string, any>) => {
+  const venue = pickText(d, 'venue', lang);
   const when = pubDateLabel(d as any, lang);
-  return when ? `${d.venue}, ${when}` : d.venue;
+  return when ? `${venue}, ${when}` : venue;
 };
 const itemBase = detailBase(category, path);
 ---
@@ -102,8 +104,8 @@ const itemBase = detailBase(category, path);
                           </span>
                         )}
                       </span>
-                      <h3 class="pub-title">{p.data.title}</h3>
-                      <p class="pub-authors">{p.data.authors}</p>
+                      <h3 class="pub-title">{pickText(p.data, 'title', lang)}</h3>
+                      <p class="pub-authors">{pickText(p.data, 'authors', lang)}</p>
                       <p class="pub-venue">{venueLine(p.data)}</p>
                     </a>
                   </li>
@@ -178,12 +180,21 @@ const itemBase = detailBase(category, path);
     padding: 16px 4px;
     color: inherit;
   }
+  /* 완료된 과제는 한 단계 물러나게 */
   .is-done .pub-title {
-    color: var(--text-muted);
+    color: var(--text-faint);
+    font-weight: 500;
   }
   .is-done .pub-authors,
   .is-done .pub-venue {
-    opacity: 0.75;
+    opacity: 0.7;
+  }
+  .is-done .tag {
+    opacity: 0.65;
+  }
+  .is-done .pub-link:hover .pub-title {
+    color: var(--accent);
+    font-weight: 600;
   }
   .pub-link:hover .pub-title {
     color: var(--accent);

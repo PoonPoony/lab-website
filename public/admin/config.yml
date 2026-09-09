@@ -113,7 +113,7 @@ collections:
       - { name: photo, label: 사진, widget: image, required: false, i18n: duplicate }
       - { name: order, label: 표시 순서 (작을수록 먼저), widget: number, default: 1, value_type: int, i18n: duplicate }
       - name: education
-        label: 학력 (지도교수용)
+        label: 학력 (선택)
         widget: list
         required: false
         i18n: true
@@ -123,7 +123,7 @@ collections:
           - { name: period, label: 연도, widget: string, required: false, hint: '예) 2015' }
           - { name: text, label: 내용, widget: string, hint: '예) 서울대학교 전기공학 박사' }
       - name: career
-        label: 경력 (지도교수용)
+        label: 경력 (선택)
         widget: list
         required: false
         i18n: true
@@ -133,13 +133,13 @@ collections:
           - { name: period, label: 기간, widget: string, required: false, hint: '예) 2018–2022' }
           - { name: text, label: 내용, widget: string, hint: '예) 현대자동차 책임연구원' }
       - name: activities
-        label: 활동 (지도교수용)
+        label: 활동 (선택)
         widget: list
         required: false
         i18n: true
         label_singular: 활동
         summary: '{{fields.period}} {{fields.text}}'
-        hint: '위원 · 지도 등 맡으신 역할. 예) 서울시 공무원 시험출제위원'
+        hint: '위원 · 지도 등 맡은 역할. 예) 서울시 공무원 시험출제위원'
         fields:
           - { name: period, label: 기간, widget: string, required: false, hint: '예) 2024' }
           - { name: text, label: 내용, widget: string }
@@ -244,6 +244,9 @@ collections:
       - { name: title, label: 제목, widget: string }
       - { name: authors, label: 저자, widget: string, hint: '예) M. Kim, S. Lee, and Y.-H. Jung' }
       - { name: venue, label: 게재처 / 권·호·페이지, widget: string }
+      - { name: title_en, label: 제목 (영문), widget: string, required: false, hint: '영문 사이트에 나옵니다. 비우면 국문이 그대로 나옵니다.' }
+      - { name: authors_en, label: 저자 (영문), widget: string, required: false }
+      - { name: venue_en, label: 게재처 (영문), widget: string, required: false }
       - name: date
         label: 게재 연월
         widget: string
@@ -270,6 +273,9 @@ collections:
       - { name: title, label: 특허명, widget: string }
       - { name: authors, label: 발명자, widget: string, hint: '예) 정영훈, 김민수' }
       - { name: venue, label: 등록 / 출원 번호, widget: string, hint: '예) 대한민국 등록특허 10-2024-0000000' }
+      - { name: title_en, label: 제목 (영문), widget: string, required: false, hint: '영문 사이트에 나옵니다. 비우면 국문이 그대로 나옵니다.' }
+      - { name: authors_en, label: 발명자 (영문), widget: string, required: false }
+      - { name: venue_en, label: 등록 / 출원 번호 (영문), widget: string, required: false }
       - name: date
         label: 등록 연월
         widget: string
@@ -295,6 +301,9 @@ collections:
       - { name: title, label: 과제명, widget: string }
       - { name: authors, label: 역할, widget: string, hint: '예) 연구책임자: 정영훈' }
       - { name: venue, label: 지원기관 / 사업명, widget: string, hint: '예) 한국연구재단 중견연구자지원사업' }
+      - { name: title_en, label: 제목 (영문), widget: string, required: false, hint: '영문 사이트에 나옵니다. 비우면 국문이 그대로 나옵니다.' }
+      - { name: authors_en, label: 역할 (영문), widget: string, required: false }
+      - { name: venue_en, label: 지원기관 / 사업명 (영문), widget: string, required: false }
       - name: start
         label: 시작 연월
         widget: string
