@@ -75,3 +75,12 @@ export function pubDateLabel(d: PubData, lang: 'ko' | 'en'): string {
   }
   return one(d.date);
 }
+
+/** 과제가 진행 중인지 끝났는지 — 종료 연월이 이번 달 이후면 진행 중 */
+export function projectStatus(d: PubData): 'ongoing' | 'done' {
+  const m = /^(\d{4})-(\d{1,2})/.exec((d.end ?? '').trim());
+  if (!m) return 'ongoing';
+  const now = new Date();
+  const cur = now.getFullYear() * 12 + (now.getMonth() + 1);
+  return Number(m[1]) * 12 + Number(m[2]) >= cur ? 'ongoing' : 'done';
+}

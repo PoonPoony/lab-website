@@ -8,6 +8,7 @@ import {
   pubYear,
   pubMonth,
   pubDateLabel,
+  projectStatus,
   type PubKey,
 } from '../i18n/pubs';
 
@@ -89,13 +90,18 @@ const itemBase = detailBase(category, path);
               {pubs
                 .filter((p) => pubYear(p.data) === year)
                 .map((p) => (
-                  <li class="pub-item">
+                  <li class:list={['pub-item', standalone && `is-${projectStatus(p.data)}`]}>
                     <a href={`${itemBase}${p.id}/`} class="pub-link">
-                      {p.data.fund && (
-                        <span class:list={['tag', `tag--fund-${p.data.fund}`]}>
-                          {t(fundKey(p.data.fund))}
-                        </span>
-                      )}
+                      <span class="pub-tags">
+                        {standalone && projectStatus(p.data) === 'ongoing' && (
+                          <span class="tag tag--ongoing">{t('projects.ongoing')}</span>
+                        )}
+                        {p.data.fund && (
+                          <span class:list={['tag', `tag--fund-${p.data.fund}`]}>
+                            {t(fundKey(p.data.fund))}
+                          </span>
+                        )}
+                      </span>
                       <h3 class="pub-title">{p.data.title}</h3>
                       <p class="pub-authors">{p.data.authors}</p>
                       <p class="pub-venue">{venueLine(p.data)}</p>
@@ -172,11 +178,26 @@ const itemBase = detailBase(category, path);
     padding: 16px 4px;
     color: inherit;
   }
+  .is-done .pub-title {
+    color: var(--text-muted);
+  }
+  .is-done .pub-authors,
+  .is-done .pub-venue {
+    opacity: 0.75;
+  }
   .pub-link:hover .pub-title {
     color: var(--accent);
   }
-  .pub-link .tag {
+  .pub-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
     margin-bottom: 8px;
+  }
+  .tag--ongoing {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
   }
   .tag--fund-gov {
     background: var(--accent-soft);
