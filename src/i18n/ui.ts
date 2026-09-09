@@ -8,7 +8,7 @@ export const defaultLang: Lang = 'ko';
 export const site = {
   ko: {
     labName: '전동파워트레인연구실',
-    labShort: 'EPL',
+    labShort: 'ePT Lab.',
     university: '영남대학교 미래자동차공학과',
     tagline: '전기기기 설계, 해석 및 최적화 연구',
     heroLead:
@@ -20,13 +20,13 @@ export const site = {
       '시스템 단위 성능 예측',
     ],
     address: '경상북도 경산시 대학로 280, 영남대학교',
-    email: 'lab@yu.ac.kr',
+    email: 'yhjung@yu.ac.kr',
     phone: '+82-53-810-0000',
   },
   en: {
-    labName: 'Electrified Powertrain Laboratory',
-    labShort: 'EPL',
-    university: 'Dept. of Future Automotive Engineering, Yeungnam University',
+    labName: 'e-Powertrain Laboratory',
+    labShort: 'ePT Lab.',
+    university: 'Dept. of Automotive Engineering, Yeungnam University',
     tagline: 'Design, Analysis and Optimization of Electric Machines',
     heroLead:
       'We design the traction motors at the heart of electrified powertrains, and push their performance limits through analysis and optimization.',
@@ -37,8 +37,8 @@ export const site = {
       'System-Level Performance Prediction',
     ],
     address: '280 Daehak-ro, Gyeongsan, Gyeongbuk, Republic of Korea',
-    email: 'lab@yu.ac.kr',
-    phone: '+82-53-810-0000',
+    email: 'yhjung@yu.ac.kr',
+    phone: '+82-53-810-3008',
   },
 } as const;
 
