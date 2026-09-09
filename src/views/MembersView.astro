@@ -8,7 +8,21 @@ interface Props {
 const { lang } = Astro.props;
 const t = useT(lang);
 
-const all = filterByLang(await getCollection('members'), lang);
+const raw = await getCollection('members');
+const all = filterByLang(raw, lang);
+
+// 영문 항목에 학력·경력·활동을 안 채웠으면 국문 값을 그대로 씁니다.
+const koBySlug = new Map(filterByLang(raw, 'ko').map((m) => [m.slug, m]));
+const cvOf = (m: (typeof all)[number]) => {
+  const ko = koBySlug.get(m.slug);
+  const pick = (key: 'education' | 'career' | 'activities') =>
+    m.data[key]?.length ? m.data[key] : (ko?.data[key] ?? []);
+  return {
+    education: pick('education'),
+    career: pick('career'),
+    activities: pick('activities'),
+  };
+};
 
 const allGroups = [
   { role: 'professor', label: t('members.professor') },
@@ -114,13 +128,15 @@ const initials = (name: string) =>
                         </p>
                       )}
                       {group.role !== 'professor' &&
-                        m.data.education.length + m.data.career.length + m.data.activities.length >
+                        cvOf(m).education.length +
+                          cvOf(m).career.length +
+                          cvOf(m).activities.length >
                           0 && (
                           <div class="person-cv">
                             {[
-                              { key: 'members.education', rows: m.data.education },
-                              { key: 'members.career', rows: m.data.career },
-                              { key: 'members.activities', rows: m.data.activities },
+                              { key: 'members.education', rows: cvOf(m).education },
+                              { key: 'members.career', rows: cvOf(m).career },
+                              { key: 'members.activities', rows: cvOf(m).activities },
                             ]
                               .filter((sec) => sec.rows.length > 0)
                               .map((sec) => (
@@ -156,13 +172,13 @@ const initials = (name: string) =>
             )}
 
             {group.role === 'professor' && group.people.map((m) =>
-              m.data.education.length + m.data.career.length + m.data.activities.length > 0 ? (
+              cvOf(m).education.length + cvOf(m).career.length + cvOf(m).activities.length > 0 ? (
                 <div class="cv">
                   {group.people.length > 1 && <h3 class="cv-who">{m.data.name}</h3>}
                   {[
-                    { key: 'members.education', rows: m.data.education },
-                    { key: 'members.career', rows: m.data.career },
-                    { key: 'members.activities', rows: m.data.activities },
+                    { key: 'members.education', rows: cvOf(m).education },
+                    { key: 'members.career', rows: cvOf(m).career },
+                    { key: 'members.activities', rows: cvOf(m).activities },
                   ]
                     .filter((sec) => sec.rows.length > 0)
                     .map((sec) => (
