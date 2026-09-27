@@ -107,8 +107,17 @@ collections:
           - { label: 석사과정, value: ms }
           - { label: 학부연구생, value: undergrad }
           - { label: 졸업생, value: alumni }
-      - { name: position, label: 직위 / 학년, widget: string, required: false, i18n: true }
-      - { name: topic, label: 연구 주제, widget: string, required: false, i18n: true }
+      - name: degree
+        label: 졸업 구분 (졸업생일 때만)
+        widget: select
+        required: false
+        i18n: duplicate
+        options:
+          - { label: 박사 졸업, value: phd }
+          - { label: 석사 졸업, value: ms }
+          - { label: 학부연구생 수료, value: undergrad }
+      - { name: position, label: 직위 / 학년, widget: string, required: false, i18n: true, hint: '졸업생은 졸업 시기와 학위. 예) 2024년 2월 석사 졸업' }
+      - { name: topic, label: 연구 주제 / 현 소속, widget: string, required: false, i18n: true, hint: '졸업생은 현재 소속. 예) 현 ○○전자 모터개발팀' }
       - { name: email, label: 이메일, widget: string, required: false, i18n: duplicate }
       - { name: photo, label: 사진, widget: image, required: false, i18n: duplicate }
       - { name: order, label: 표시 순서 (작을수록 먼저), widget: number, default: 1, value_type: int, i18n: duplicate }

@@ -40,13 +40,29 @@ const allGroups = [
   }))
   .filter((g) => g.people.length > 0);
 
+// 졸업생은 마친 과정별로 다시 나눕니다.
+const alumniGroups = (['phd', 'ms', 'undergrad', ''] as const)
+  .map((deg) => ({
+    role: 'alumni',
+    degree: deg,
+    label: t(deg ? `members.alumni.${deg}` : 'members.alumni.etc'),
+    people: all
+      .filter((m) => m.data.role === 'alumni' && (m.data.degree ?? '') === deg)
+      .sort((a, b) => a.data.order - b.data.order || a.data.name.localeCompare(b.data.name)),
+  }))
+  .filter((g) => g.people.length > 0);
+
 // 교수 / 학생 / 졸업생 세 갈래로 묶습니다.
 const tabs = [
   { key: 'faculty', label: t('members.tab.faculty'), roles: ['professor'] },
   { key: 'students', label: t('members.tab.students'), roles: ['postdoc', 'phd', 'ms', 'undergrad'] },
   { key: 'alumni', label: t('members.tab.alumni'), roles: ['alumni'] },
 ]
-  .map((tab) => ({ ...tab, groups: allGroups.filter((g) => tab.roles.includes(g.role)) }))
+  .map((tab) => ({
+    ...tab,
+    groups:
+      tab.key === 'alumni' ? alumniGroups : allGroups.filter((g) => tab.roles.includes(g.role)),
+  }))
   .filter((tab) => tab.groups.length > 0);
 
 const initials = (name: string) =>
@@ -450,8 +466,8 @@ const initials = (name: string) =>
   .alumni-list {
     list-style: none;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 10px 26px;
+    grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+    gap: 10px 28px;
   }
   .alumni-item {
     font-size: 0.92rem;
