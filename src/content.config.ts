@@ -42,6 +42,7 @@ const members = defineCollection({
     activities: z
       .array(z.object({ period: z.string().default(''), text: z.string() }))
       .default([]),
+    degree: z.enum(['phd', 'ms', 'undergrad']).or(z.literal('')).optional(),
     links: z
       .array(z.object({ label: z.string(), url: z.string() }))
       .default([]),
