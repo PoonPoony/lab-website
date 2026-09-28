@@ -29,6 +29,8 @@ const members = defineCollection({
     role: z.enum(['professor', 'postdoc', 'phd', 'ms', 'undergrad', 'alumni']),
     position: z.string().default(''),
     topic: z.string().default(''),
+    // 소속 / 직장 — 파트타임 재학생, 졸업생에게 씁니다.
+    affiliation: z.string().default(''),
     email: z.string().default(''),
     photo: z.string().optional(),
     order: z.number().default(0),

@@ -119,7 +119,9 @@ const initials = (name: string) =>
                   <li class="alumni-item">
                     <strong>{m.data.name}</strong>
                     {m.data.position && <span> · {m.data.position}</span>}
-                    {m.data.topic && <span class="alumni-topic">{m.data.topic}</span>}
+                    {(m.data.affiliation || m.data.topic) && (
+                      <span class="alumni-topic">{m.data.affiliation || m.data.topic}</span>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -141,6 +143,12 @@ const initials = (name: string) =>
                         <p class="person-topic">
                           <span class="person-topic-label">{t('members.topic')}</span>
                           {m.data.topic}
+                        </p>
+                      )}
+                      {m.data.affiliation && (
+                        <p class="person-topic">
+                          <span class="person-topic-label">{t('members.affiliation')}</span>
+                          {m.data.affiliation}
                         </p>
                       )}
                       {group.role !== 'professor' &&
